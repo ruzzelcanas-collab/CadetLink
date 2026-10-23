@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CadetLink - Dashboard</title>
+  <link rel="stylesheet" href="Dashboard.css" />
+  <link rel="stylesheet" href="DevilsReports.css" />
+  <link rel="stylesheet" href="../Emergency%20Button/Emergencybutton.css" />
+  <link rel="stylesheet" href="../Daily%20Duties/duties.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+
+
+
+  <!-- Registration and Firebase authentication run on the loading screen. -->
+
+
+
+
+
+
+
+
+  <!-- Top Header Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <!-- Logo & Branding -->
+      <div class="brand-group">
+        <div class="brand-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+        </div>
+        <span class="brand-name">Cadet<span class="brand-accent">Link</span></span>
+      </div>
+      <button class="logout-btn" id="logoutBtn" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Log out</span>
+      </button>
+    </div>
+  </header>
+  <main class="dashboard-body">
+
+<div class="duties-grid">
+<!-- Daily Duties Collapsible Section -->
+<section class="duties-section" aria-label="Daily duties">
+  <!-- Trigger Button -->
+  <button class="duties-btn" id="dutiesToggleBtn" type="button" aria-expanded="false" aria-controls="dutiesWrapper">
+    <div class="duties-btn-content">
+      <span class="duties-icon">📋</span>
+      <span class="duties-title">Daily Duties</span>
+    </div>
+    <!-- Rotating Chevron Arrow -->
+    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
+  <!-- Collapsible Content Wrapper -->
+  <div class="duties-collapse-wrapper" id="dutiesWrapper">
+    <div class="duties-content-box">
+      <div id="dutiesDataContainer">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="duties-section" aria-label="CMI Extract and Daily Bread">
+  <button class="duties-btn" id="cmiToggleBtn" type="button" aria-expanded="false" aria-controls="cmiWrapper">
+    <div class="duties-btn-content">
+      <span class="duties-icon">📋</span>
+      <span class="duties-title">CMI Extract and Daily Bread</span>
+    </div>
+    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+  <div class="duties-collapse-wrapper" id="cmiWrapper">
+    <div class="duties-content-box">
+      <div id="cmiDataContainer"></div>
+    </div>
+  </div>
+</section>
+<section class="duties-section" aria-label="Studycall Watcher">
+  <button class="duties-btn" id="studyCallToggleBtn" type="button" aria-expanded="false" aria-controls="studyCallWrapper">
+    <div class="duties-btn-content">
+      <span class="duties-icon">📋</span>
+      <span class="duties-title">Studycall Watcher</span>
+    </div>
+    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+  <div class="duties-collapse-wrapper" id="studyCallWrapper">
+    <div class="duties-content-box">
+      <div id="studyCallDataContainer"></div>
+    </div>
+  </div>
+</section>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="announcements-grid user-announcements-grid">
+  <section class="announcements-section" aria-labelledby="generalAnnouncementsTitle">
+    <header class="announcements-header">
+      <span class="announcements-icon" aria-hidden="true">📢</span>
+      <h2 id="generalAnnouncementsTitle" class="announcements-title">General Announcements</h2>
+    </header>
+    <div class="announcements-content" id="announcementsContainer"></div>
+  </section>
+  <section class="announcements-section" aria-labelledby="clcAnnouncementsTitle">
+    <header class="announcements-header clc-announcements-header">
+      <span class="announcements-icon" aria-hidden="true">📢</span>
+      <h2 id="clcAnnouncementsTitle" class="announcements-title">CLC Announcement</h2>
+    </header>
+    <div class="announcements-content" id="clcAnnouncementsContainer"></div>
+  </section>
+</div>
+<section class="announcements-section devils-report-section" aria-labelledby="devilsReportTitle">
+  <header class="announcements-header devils-report-header">
+    <span class="announcements-icon" aria-hidden="true">🚨</span>
+    <h2 id="devilsReportTitle" class="announcements-title">DEVILS REPORT</h2>
+  </header>
+  <div class="announcements-content devils-report-content">
+    <div class="devils-report-columns">
+      <form class="devils-report-form" id="devilsReportForm">
+        <h3>Send a report</h3>
+        <label for="devilsReportPicture">Picture</label>
+        <input id="devilsReportPicture" name="picture" type="file" accept="image/*" required />
+        <label for="devilsReportDescription">Description</label>
+        <textarea id="devilsReportDescription" name="description" rows="3" maxlength="1000" required></textarea>
+        <label for="devilsReportPlace">Place</label>
+        <input id="devilsReportPlace" name="place" type="text" maxlength="160" required />
+        <button class="devils-report-send" id="devilsReportSend" type="submit">Send report</button>
+        <p class="devils-report-status" id="devilsReportStatus" role="status" aria-live="polite"></p>
+      </form>
+      <section class="devils-report-sent-panel" aria-labelledby="devilsReportsSentTitle">
+        <h3 id="devilsReportsSentTitle">Sent reports</h3>
+        <div class="devils-report-feed" id="devilsReportContainer" aria-live="polite"></div>
+      </section>
+    </div>
+  </div>
+</section>
+<section class="announcements-section nmo-record-section" aria-labelledby="nmoRecordTitle">
+  <header class="announcements-header nmo-record-header">
+    <span class="announcements-icon" aria-hidden="true">📁</span>
+    <h2 id="nmoRecordTitle" class="announcements-title">NMO RECORDS</h2>
+  </header>
+  <div class="announcements-content nmo-record-content">
+    <div class="nmo-record-columns">
+      <section class="nmo-record-panel" aria-labelledby="pendingNmoTitle">
+        <h3 id="pendingNmoTitle">Pending NMO</h3>
+        <div class="nmo-record-list" id="pendingNmoRecords" aria-live="polite">
+          <p class="nmo-record-empty">No pending NMO records.</p>
+        </div>
+      </section>
+      <section class="nmo-record-panel nmo-record-history" aria-labelledby="approvedNmoTitle">
+        <h3 id="approvedNmoTitle">Approved NMO</h3>
+        <div class="nmo-record-list" id="approvedNmoRecords" aria-live="polite">
+          <p class="nmo-record-empty">No approved NMO records.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+  </main>
+  <script src="Dashboard.js"></script>
+  <script src="../Daily%20Duties/duties.js"></script>
+  <script src="../Emergency%20Button/Emergencybutton.js"></script>
+  <script src="DevilsReports.js"></script>
+  <script src="NmoRecords.js"></script>
+</body>
+</html>

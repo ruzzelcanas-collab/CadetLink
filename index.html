@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1e40af" />
+  <title>CadetLink - Sign in</title>
+  <link rel="stylesheet" href="Access.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</head>
+<body class="access-page">
+  <main class="access-shell">
+    <section class="access-card" aria-labelledby="brandTitle">
+      <p class="screen-eyebrow">CADETLINK ACCOUNT ACCESS</p>
+      <h1 id="brandTitle">CadetLink</h1>
+      <p class="access-intro">Sign in with your registered account to open your dashboard.</p>
+
+      <section aria-label="Sign in">
+        <form id="signInForm">
+          <div class="form-group">
+            <label for="signInRole">Account type</label>
+            <select id="signInRole">
+              <option value="Normal Cadet">Cadet</option>
+              <option value="CLC">CLC</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="signInName">Name</label>
+            <input id="signInName" type="text" autocomplete="name" maxlength="100" required />
+          </div>
+          <div class="form-group" id="signInNumberGroup">
+            <label for="signInNumber">Cadet number</label>
+            <input id="signInNumber" type="text" autocomplete="off" maxlength="40" required />
+          </div>
+          <div class="form-group">
+            <label for="signInPassword">Password</label>
+            <input id="signInPassword" type="password" autocomplete="current-password" required />
+          </div>
+          <p class="form-error" id="signInError" role="alert"></p>
+          <button class="button-primary access-submit" id="signInSubmit" type="submit">Sign in and continue</button>
+          <p class="access-note">Admin sign in uses name and password. Cadet and CLC sign in uses name, cadet number, and password.</p>
+        </form>
+      </section>
+
+      <p class="access-status" id="accessStatus" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script>
+    function loadAuthUtils(paths, index = 0) {
+      const script = document.createElement("script");
+      script.src = paths[index];
+      script.onload = () => {
+        const accessScript = document.createElement("script");
+        accessScript.src = "Access.js";
+        document.body.append(accessScript);
+      };
+      script.onerror = () => {
+        script.remove();
+        if (index + 1 < paths.length) {
+          loadAuthUtils(paths, index + 1);
+          return;
+        }
+
+        document.getElementById("accessStatus").textContent =
+          "Account access could not be initialized. Refresh this page to try again.";
+      };
+      document.body.append(script);
+    }
+
+    loadAuthUtils(["Loading%20screen/auth-utils.js", "auth-utils.js"]);
+  </script>
+</body>
+</html>

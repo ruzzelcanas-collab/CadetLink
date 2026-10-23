@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>CadetLink - Admin Panel</title>
+	<link rel="stylesheet" href="Admin.css" />
+	<link rel="stylesheet" href="../Dashboard/DevilsReports.css" />
+	<link rel="stylesheet" href="../Emergency%20Button/Emergencybutton.css" />
+	<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</head>
+<body>
+	<header class="navbar">
+		<div class="nav-container">
+			<a class="brand-group" href="../Dashboard/Dashboard.html" aria-label="CadetLink dashboard">
+				<span class="brand-icon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<rect x="2" y="5" width="20" height="14" rx="2"></rect>
+						<line x1="2" y1="10" x2="22" y2="10"></line>
+					</svg>
+				</span>
+				<span class="brand-name">Cadet<span class="brand-accent">Link</span></span>
+			</a>
+		</div>
+	</header>
+
+	<main class="admin-body">
+		<div class="admin-dashboard-grid">
+		<section class="announcements-section admin-announcement-section" aria-labelledby="announcementsTitle">
+			<header class="announcements-header">
+				<span class="announcements-icon" aria-hidden="true">📢</span>
+				<h1 id="announcementsTitle" class="announcements-title">Announcements Control Panel</h1>
+			</header>
+
+			<div class="announcements-content">
+				<form class="announcement-form" id="announcementForm">
+					<h2 class="form-title">Write an announcement</h2>
+					<label for="announcementTitle">Title</label>
+					<input id="announcementTitle" name="title" type="text" maxlength="100" required />
+					<label for="announcementMessage">Message</label>
+					<textarea id="announcementMessage" name="message" rows="5" maxlength="2000" required></textarea>
+					<div class="form-actions">
+						<button class="publish-button" id="publishButton" type="submit">Publish announcement</button>
+						<button class="cancel-button" id="cancelEditButton" type="button" hidden>Cancel edit</button>
+					</div>
+					<p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+				</form>
+
+				<section class="published-section" aria-labelledby="publishedTitle">
+					<div class="published-heading">
+						<h2 id="publishedTitle">Published announcements</h2>
+						<span class="announcement-count" id="announcementCount">0</span>
+					</div>
+					<div class="announcement-list" id="announcementList" aria-live="polite"></div>
+				</section>
+			</div>
+		</section>
+		<section class="announcements-section admin-nmo-section" aria-labelledby="adminNmoTitle">
+			<header class="announcements-header admin-nmo-header">
+				<span class="announcements-icon" aria-hidden="true">📁</span>
+				<h2 id="adminNmoTitle" class="announcements-title">Cadets NMO</h2>
+				<div class="admin-nmo-header-actions">
+					<button class="admin-nmo-history-button" id="openAdminNmoHistory" type="button">History</button>
+					<a class="admin-nmo-history-button" href="https://docs.google.com/spreadsheets/d/1pcaN-_WUZQscs2KiT05sKZkY-b5wwTNn92VwspWE_OU/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Google Spreadsheet</a>
+				</div>
+			</header>
+			<div class="admin-nmo-content">
+				<div class="admin-nmo-feed" id="adminNmoFeed" aria-live="polite">
+					<p class="admin-nmo-empty">No NMO slips have been submitted yet.</p>
+				</div>
+			</div>
+		</section>
+		<section class="announcements-section admin-devils-report-section" aria-labelledby="adminDevilsReportTitle">
+			<header class="announcements-header devils-report-header">
+				<span class="announcements-icon" aria-hidden="true">🚨</span>
+				<h2 id="adminDevilsReportTitle" class="announcements-title">DEVILS REPORT</h2>
+			</header>
+			<div class="announcements-content devils-report-content">
+				<section class="admin-devils-report-sent" aria-labelledby="adminDevilsReportsSentTitle">
+					<h3 id="adminDevilsReportsSentTitle">Sent reports</h3>
+					<div class="devils-report-feed" id="devilsReportContainer" aria-live="polite"></div>
+				</section>
+			</div>
+		</section>
+		</div>
+	</main>
+	<div class="admin-nmo-history-modal" id="adminNmoHistoryModal" hidden>
+		<section class="admin-nmo-history-dialog" role="dialog" aria-modal="true" aria-labelledby="adminNmoHistoryTitle">
+			<header class="admin-nmo-history-header">
+				<h2 id="adminNmoHistoryTitle">NMO History (Last 30 Days)</h2>
+				<button class="admin-nmo-history-close" id="closeAdminNmoHistory" type="button" aria-label="Close NMO history">&times;</button>
+			</header>
+			<div class="admin-nmo-history-content">
+				<div class="admin-nmo-history-list" id="adminNmoHistoryList" aria-live="polite"></div>
+			</div>
+		</section>
+	</div>
+	<script src="Admin.js"></script>
+	<script src="../Emergency%20Button/Emergencybutton.js"></script>
+	<script src="../Dashboard/DevilsReports.js"></script>
+	<script src="../Dashboard/NmoRecords.js"></script>
+</body>
+</html>
