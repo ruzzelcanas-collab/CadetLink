@@ -1,0 +1,77 @@
+.night-orders-content {
+  display: block;
+  min-height: 0;
+  padding: 1rem;
+}
+
+.night-orders-schedule {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.night-order-day {
+  min-width: 0;
+  padding: 0.85rem;
+  border: 1px solid #ddd6fe;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.night-order-date {
+  margin-bottom: 0.75rem;
+  color: #4c1d95;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.night-order-entry {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, auto) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid #f1effa;
+}
+
+.night-order-time {
+  color: #4c1d95;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.night-order-details,
+.night-order-note {
+  min-width: 0;
+  color: #334155;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.night-order-note {
+  padding: 0.5rem 0;
+}
+
+.night-order-bullets {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0;
+  padding-left: 1.15rem;
+}
+
+.night-order-bullets li {
+  padding-left: 0.1rem;
+}
+
+.night-orders-empty {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.night-orders-empty.is-error {
+  color: #b91c1c;
+}
