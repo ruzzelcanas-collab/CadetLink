@@ -1,5 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/api/nmo-chat", "destination": "/functions/nmo-chat.js" }
-  ]
-}
