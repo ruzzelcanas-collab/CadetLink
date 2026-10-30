@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1e40af" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/icons/cadetlink.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/cadetlink-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>CadetLink - Scan Card</title>
+  <link rel="stylesheet" href="Loadingscreen.css" />
+  <link rel="stylesheet" href="../pwa-install.css" />
+  <link rel="stylesheet" href="../responsive.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="auth-utils.js"></script>
+</head>
+<body>
+  <main id="rfid-loader-screen" class="loading-overlay">
+    <div class="scan-stage">
+      <span class="signal-wave signal-wave-one" aria-hidden="true"></span>
+      <span class="signal-wave signal-wave-two" aria-hidden="true"></span>
+      <span class="signal-wave signal-wave-three" aria-hidden="true"></span>
+      <section class="card-box" aria-labelledby="brandTitle">
+        <h1 class="brand-title" id="brandTitle">CadetLink</h1>
+        <div class="divider"></div>
+        <p class="scan-text" id="scanText">Ready to scan</p>
+        <div class="pulse-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+        </div>
+        <button class="connect-button" id="connectReaderBtn" type="button" hidden>Authorize RFID reader</button>
+        <p class="reader-status is-idle" id="readerStatus" role="status" aria-live="polite">Connecting to RFID reader...</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="auth-modal hidden" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" aria-describedby="loginDescription">
+    <form class="auth-card" id="loginForm">
+      <div class="dialog-heading">
+        <div>
+          <p class="screen-eyebrow">REGISTERED CARD</p>
+          <h2 id="loginTitle">Welcome back</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-modal aria-label="Close sign in">&times;</button>
+      </div>
+      <p class="dialog-description" id="loginDescription">Enter your password to open your dashboard.</p>
+      <div class="cadet-identity">
+        <strong id="loginCadetName">Cadet</strong>
+        <span id="loginCadetNumber"></span>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" required />
+      </div>
+      <p class="form-error" id="loginError" role="alert"></p>
+      <div class="dialog-actions">
+        <button class="button-secondary" type="button" data-close-modal>Cancel</button>
+        <button class="button-primary" type="submit">Continue to dashboard</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="auth-modal hidden" id="registrationModal" role="dialog" aria-modal="true" aria-labelledby="registrationTitle" aria-describedby="registrationDescription">
+    <form class="auth-card" id="registrationForm">
+      <div class="dialog-heading">
+        <div>
+          <p class="screen-eyebrow">NEW RFID CARD</p>
+          <h2 id="registrationTitle">Register cadet</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-modal aria-label="Close registration">&times;</button>
+      </div>
+      <p class="dialog-description" id="registrationDescription">Add the cadet details and choose a password to register.</p>
+      <div class="scanned-uid"><span>Scanned UID</span><strong id="registrationUid">---</strong></div>
+      <div class="form-group" id="registrationNameGroup">
+        <label for="registrationName" id="registrationNameLabel">Cadet name</label>
+        <input type="text" id="registrationName" autocomplete="name" maxlength="100" placeholder="D/Cdt Lastname" required />
+      </div>
+      <div class="form-group" id="registrationNumberGroup">
+        <label for="registrationNumber">Cadet number</label>
+        <input type="text" id="registrationNumber" autocomplete="off" maxlength="40" required />
+      </div>
+      <div class="form-group">
+        <label for="registrationCategory">Account category</label>
+        <select id="registrationCategory" required>
+          <option value="Normal Cadet">Normal Cadet</option>
+          <option value="CLC">CLC</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group" id="registrationPasswordGroup">
+        <label for="registrationPassword">Password</label>
+        <input type="password" id="registrationPassword" autocomplete="new-password" minlength="8" required />
+        <span class="field-hint">Use at least 8 characters.</span>
+      </div>
+      <p class="form-error" id="registrationError" role="alert"></p>
+      <div class="dialog-actions">
+        <button class="button-secondary" type="button" data-close-modal>Cancel</button>
+        <button class="button-primary" type="submit">Register and continue</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="loadingscript.js"></script>
+  <script src="../pwa-install.js"></script>
+</body>
+</html>
