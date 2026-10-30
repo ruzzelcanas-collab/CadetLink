@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Dashboard/api/nmo-chat.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": "Dashboard/api/cmi.pdf" }
+    }
+  ],
+  "routes": [
+    { "src": "/api/nmo-chat", "dest": "/Dashboard/api/nmo-chat.js" }
+  ]
+}
