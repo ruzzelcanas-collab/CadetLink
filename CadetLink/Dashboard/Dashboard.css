@@ -208,6 +208,17 @@ body {
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
 }
 
+.announcements-featured {
+  display: flex;
+  min-height: 480px;
+  grid-column: 1 / -1;
+  flex-direction: column;
+}
+
+.announcements-featured .announcements-content {
+  flex: 1;
+}
+
 .announcements-header {
   display: flex;
   align-items: center;

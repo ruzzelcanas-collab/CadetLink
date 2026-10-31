@@ -7,7 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	} catch {
 		userSession = null;
 	}
-	if (!userSession || !userSession.uid) return;
+	if (!userSession || !userSession.uid || !userSession.accessToken
+		|| userSession.category !== document.body.dataset.requiredCategory) {
+		window.location.replace("../index.html");
+		return;
+	}
+	window.CadetLinkPortalSections.initializeCLCDashboard();
 
 	const logoutButton = document.getElementById("logoutBtn");
 	logoutButton?.addEventListener("click", () => {

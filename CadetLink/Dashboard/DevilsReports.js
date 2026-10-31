@@ -1,4 +1,5 @@
 const DEVILS_REPORTS_PATH = "devilsReports";
+const DEVILS_REPORTS_PREVIEW_KEY = "cadetlinkPreviewDevilsReports";
 const DEVILS_REPORTS_FIREBASE_CONFIG = {
   apiKey: "AIzaSyCsBK8esC6Nwd-xp2cce9UtKi5xDEhWwgY",
   authDomain: "cadetlink-d53c4.firebaseapp.com",
@@ -25,9 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.replace("../Loading%20screen/Loadingscreen.html");
     return;
   }
-  if (container.closest(".admin-devils-report-section") && userSession.category !== "Admin") return;
+  const canViewAdminFeed = ["Admin", "CLC", "CCA", "CAA"].includes(userSession.category);
+  if (container.closest(".admin-devils-report-section") && !canViewAdminFeed) return;
   const isAdminFeed = Boolean(container.closest(".admin-devils-report-section"))
-    && userSession.category === "Admin";
+    && canViewAdminFeed;
   const isUserDashboard = userSession.category === "Normal Cadet" && !isAdminFeed;
   const adminStatus = isAdminFeed ? document.getElementById("devilsReportAdminStatus") : null;
 
@@ -36,6 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const sendButton = document.getElementById("devilsReportSend");
   const reportsFeed = container;
   let previousReportIds = null;
+  const isLocalPreview = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+  if (isLocalPreview) {
+    initializeLocalPreview();
+    return;
+  }
+
   if (!window.firebase || typeof firebase.database !== "function") {
     showFeedError("Reports are unavailable because Firebase did not load.");
     console.error("DEVILS REPORT could not start because Firebase did not load.");
@@ -284,6 +292,134 @@ document.addEventListener("DOMContentLoaded", () => {
       reportsFeed.append(card);
     });
     previousReportIds = currentReportIds;
+  }
+
+  function initializeLocalPreview() {
+    const reportSection = container.closest(".devils-report-section, .admin-devils-report-section");
+    const content = reportSection?.querySelector(".devils-report-content");
+    if (content) {
+      const notice = document.createElement("p");
+      notice.className = "devils-report-preview-note";
+      notice.textContent = "Local preview only: reports are saved in this browser and do not sync to Firebase.";
+      content.prepend(notice);
+    }
+
+    function readLocalReports() {
+      try {
+        const reports = JSON.parse(localStorage.getItem(DEVILS_REPORTS_PREVIEW_KEY) || "{}");
+        if (!reports || typeof reports !== "object" || Array.isArray(reports)) {
+          throw new Error("Local report data is invalid.");
+        }
+        return reports;
+      } catch (error) {
+        console.error("Local DEVILS REPORT preview data could not be read:", error);
+        showFeedError(error.message || "Local reports could not be read.");
+        return null;
+      }
+    }
+
+    function saveLocalReports(reports) {
+      try {
+        localStorage.setItem(DEVILS_REPORTS_PREVIEW_KEY, JSON.stringify(reports));
+        renderReports(reports);
+        return true;
+      } catch (error) {
+        console.error("Local DEVILS REPORT preview data could not be saved:", error);
+        if (adminStatus) {
+          adminStatus.textContent = error.message || "Local report storage is unavailable or full.";
+          adminStatus.classList.add("is-error");
+        } else if (status) {
+          showStatus(error.message || "Local report storage is unavailable or full.", true);
+        }
+        return false;
+      }
+    }
+
+    const savedReports = readLocalReports();
+    if (!savedReports) return;
+    renderReports(savedReports);
+    window.addEventListener("storage", (event) => {
+      if (event.key !== DEVILS_REPORTS_PREVIEW_KEY) return;
+      const latestReports = readLocalReports();
+      if (latestReports) renderReports(latestReports);
+    });
+
+    if (isAdminFeed) {
+      reportsFeed.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-action]");
+        if (!button || button.disabled) return;
+        const reports = readLocalReports();
+        if (!reports || !reports[button.dataset.id]) return;
+
+        if (button.dataset.action === "remove-report"
+          && !window.confirm("Remove this preview report from all preview dashboards?")) return;
+        if (!["acknowledge-report", "remove-report"].includes(button.dataset.action)) return;
+
+        if (button.dataset.action === "acknowledge-report") {
+          reports[button.dataset.id].acknowledged = true;
+          reports[button.dataset.id].acknowledgedAt = new Date().toISOString();
+        } else {
+          delete reports[button.dataset.id];
+        }
+        saveLocalReports(reports);
+      });
+    }
+
+    if (!form || !status || !sendButton) return;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      status.textContent = "";
+      status.classList.remove("is-error");
+
+      const pictureInput = document.getElementById("devilsReportPicture");
+      const descriptionInput = document.getElementById("devilsReportDescription");
+      const placeInput = document.getElementById("devilsReportPlace");
+      const pictureFile = pictureInput?.files?.[0];
+      if (!pictureFile || !pictureFile.type.startsWith("image/")) {
+        showStatus("Choose an image to attach to your report.", true);
+        return;
+      }
+      if (pictureFile.size > 10 * 1024 * 1024) {
+        showStatus("Choose an image smaller than 10 MB.", true);
+        return;
+      }
+      const description = descriptionInput.value.trim();
+      const place = placeInput.value.trim();
+      if (!description || !place) {
+        showStatus("Enter a description and place for your report.", true);
+        return;
+      }
+
+      sendButton.disabled = true;
+      sendButton.textContent = "Sending...";
+      try {
+        const image = await readCompressedReportImage(pictureFile);
+        if (image.length > 1_100_000) {
+          throw new Error("The compressed picture is too large to share. Choose a smaller image.");
+        }
+        const reports = readLocalReports();
+        if (!reports) throw new Error("Local preview reports could not be loaded.");
+        const id = crypto.randomUUID();
+        reports[id] = {
+          image,
+          description,
+          place,
+          senderUid: userSession.uid,
+          senderName: userSession.name || "Cadet",
+          senderPicture: window.CadetLinkProfilePictures?.getCurrentPicture() || userSession.profilePicture || "",
+          sentAt: new Date().toISOString()
+        };
+        if (!saveLocalReports(reports)) throw new Error("Could not save this preview report.");
+        form.reset();
+        showStatus("Preview report saved and shared with the other local dashboards.", false);
+      } catch (error) {
+        console.error("Local DEVILS REPORT preview could not be saved:", error);
+        showStatus(error.message || "Could not save the preview report.", true);
+      } finally {
+        sendButton.disabled = false;
+        sendButton.textContent = "Send report";
+      }
+    });
   }
 
   function showFeedError(message) {

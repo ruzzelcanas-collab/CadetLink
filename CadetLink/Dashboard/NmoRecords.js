@@ -72,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (!userSession || !userSession.uid) return;
 	if (isClcPage && userSession.category !== "CLC") return;
 	if (isClcNmoPage && userSession.category !== "CLC") return;
-	if (isAdminPage && userSession.category !== "Admin") return;
+	if (isAdminPage && userSession.category !== "Admin"
+		&& !(userSession.category === "CCA" && userSession.subcategory === "CCO/TLU")) return;
 	if (isCadetPage && userSession.category !== "Normal Cadet") return;
 
 	if (!window.firebase || typeof firebase.database !== "function") {

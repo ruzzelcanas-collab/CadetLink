@@ -14,6 +14,18 @@
   flex: 1;
 }
 
+.devils-report-preview-note {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #facc15;
+  border-radius: 9px;
+  background: #fefce8;
+  color: #854d0e;
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
 .devils-report-columns {
   display: grid;
   grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr);
@@ -441,6 +453,12 @@
 .nmo-user-approved-date {
   color: #166534;
   font-weight: 700;
+}
+
+body[data-theme="night"] .devils-report-preview-note {
+  border-color: #a16207;
+  background: #422006;
+  color: #fde68a;
 }
 
 @media (max-width: 900px) {

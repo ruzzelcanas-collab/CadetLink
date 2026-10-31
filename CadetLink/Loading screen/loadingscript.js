@@ -11,11 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginError = document.getElementById("loginError");
   const registrationError = document.getElementById("registrationError");
   const loginPassword = document.getElementById("loginPassword");
+  const loginSubcategory = document.getElementById("loginSubcategory");
+  const loginSubcategoryGroup = document.getElementById("loginSubcategoryGroup");
   const registrationName = document.getElementById("registrationName");
   const registrationNameLabel = document.getElementById("registrationNameLabel");
   const registrationNumber = document.getElementById("registrationNumber");
   const registrationNumberGroup = document.getElementById("registrationNumberGroup");
   const registrationCategory = document.getElementById("registrationCategory");
+  const registrationSubcategory = document.getElementById("registrationSubcategory");
+  const registrationSubcategoryGroup = document.getElementById("registrationSubcategoryGroup");
   const registrationPassword = document.getElementById("registrationPassword");
   const loginCadetName = document.getElementById("loginCadetName");
   const loginCadetNumber = document.getElementById("loginCadetNumber");
@@ -24,13 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!statusOutput || !loginForm || !registrationForm) return;
 
-  if (!window.firebase || typeof firebase.database !== "function") {
-    setStatus("Firebase did not load. Refresh this page to try again.", "error");
-    return;
-  }
-
-  if (!firebase.apps.length) firebase.initializeApp(CadetLinkAuth.firebaseConfig);
-  const database = firebase.database();
   let activeUid = "";
   let activeCadet = null;
   let registrationMode = "new";
@@ -164,8 +161,14 @@ document.addEventListener("DOMContentLoaded", () => {
     setStatus(`Checking card ${uid}...`, "checking");
 
     try {
-      const snapshot = await database.ref(`cadets/${uid}`).once("value");
-      if (!snapshot.exists()) {
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "lookup-card", uid })
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || "Could not check this card.");
+      if (!result.exists) {
         activeCadet = null;
         registrationMode = "new";
         registrationForm.reset();
@@ -181,22 +184,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      activeCadet = snapshot.val();
-      if (!activeCadet.password?.hash || !activeCadet.password?.salt) {
+      activeCadet = result.account;
+      if (result.needsPasswordSetup) {
         registrationMode = "upgrade";
         registrationForm.reset();
         registrationName.value = activeCadet.name || "";
         registrationNumber.value = activeCadet.cadetNumber || "";
-        registrationCategory.value = CadetLinkAuth.normalizeUserCategory(activeCadet.category);
+        registrationCategory.value = activeCadet.category || "Normal Cadet";
         registrationError.textContent = "";
         registrationTitle.textContent = "Set up your password";
         registrationDescription.textContent = "This card has an older registration. Complete the required account details and choose a password.";
         updateRegistrationCategoryFields();
+        registrationSubcategory.value = activeCadet.subcategory || "";
         document.getElementById("registrationUid").textContent = uid;
         await sendLcdCommand("SIGNUP");
         openModal(registrationModal);
         setStatus("Card found. Finish account setup.", "checking");
-        (registrationCategory.value === "Admin" ? registrationName : registrationNumber).focus();
+        (["CCA", "CAA"].includes(registrationCategory.value) ? registrationName : registrationNumber).focus();
         return;
       }
 
@@ -204,37 +208,45 @@ document.addEventListener("DOMContentLoaded", () => {
       loginError.textContent = "";
       loginCadetName.textContent = activeCadet.name || "Registered cadet";
       loginCadetNumber.textContent = activeCadet.cadetNumber ? `Cadet ${activeCadet.cadetNumber}` : uid;
+      updateLoginSubcategoryFields(activeCadet.category, activeCadet.subcategory);
       openModal(loginModal);
       setStatus("Registered card found. Enter the password to continue.", "ready");
       loginPassword.focus();
     } catch (error) {
       console.error("Could not look up RFID card:", error);
-      setStatus("Could not check this card in Firebase. Check your connection and try again.", "error");
+      setStatus("Could not check this card. Check your connection and try again.", "error");
     }
   }
 
   async function signIn(event) {
     event.preventDefault();
-    if (!activeUid || !activeCadet?.password) return;
+    if (!activeUid || !activeCadet) return;
 
     const submitButton = loginForm.querySelector("button[type=submit]");
     submitButton.disabled = true;
     submitButton.textContent = "Checking...";
     loginError.textContent = "";
     try {
-      const credential = activeCadet.password;
-      const actualHash = await CadetLinkAuth.derivePasswordHash(loginPassword.value, credential.salt, credential.iterations);
-      if (!CadetLinkAuth.constantTimeEqual(actualHash, credential.hash)) {
-        loginError.textContent = "That password did not match. Try again.";
-        loginPassword.select();
-        return;
-      }
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: activeCadet.category === "Admin" ? "admin-login" : "login",
+          category: activeCadet.category,
+          subcategory: loginSubcategory.value,
+          name: activeCadet.name || "",
+          cadetNumber: activeCadet.cadetNumber || "",
+          password: loginPassword.value
+        })
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || "That password or account section did not match.");
       await sendLcdCommand("LOGIN_SUCCESS", activeCadet.name || "Cadet");
       await new Promise((resolve) => window.setTimeout(resolve, 3500));
-      enterDashboard(activeUid, activeCadet);
+      enterDashboard(result.uid, result.account, result.token);
     } catch (error) {
       console.error("Password verification failed:", error);
-      loginError.textContent = "Could not verify the password. Please try again.";
+      loginError.textContent = error.message || "Could not verify the password. Please try again.";
     } finally {
       submitButton.disabled = false;
       submitButton.textContent = "Continue to dashboard";
@@ -247,10 +259,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const name = registrationName.value.trim();
     const cadetNumber = registrationNumber.value.trim();
-    const category = CadetLinkAuth.normalizeUserCategory(registrationCategory.value);
+    const category = registrationCategory.value;
+    const subcategory = registrationSubcategory.value;
     const password = registrationPassword.value;
-    if (!name || (category !== "Admin" && !cadetNumber) || password.length < 8) {
-      registrationError.textContent = category === "Admin"
+    const usesNameAndPassword = ["CCA", "CAA"].includes(category);
+    if (!name || (!usesNameAndPassword && !cadetNumber) || password.length < 8
+      || (["CCA", "CAA"].includes(category) && !subcategory)) {
+      registrationError.textContent = usesNameAndPassword
         ? "Enter a name and use a password of at least 8 characters."
         : "Enter all details and use a password of at least 8 characters.";
       return;
@@ -262,76 +277,25 @@ document.addEventListener("DOMContentLoaded", () => {
     registrationError.textContent = "";
 
     try {
-      const accountsSnapshot = await database.ref("cadets").once("value");
-      const accounts = accountsSnapshot.val();
-      const otherAccounts = accounts && typeof accounts === "object"
-        ? Object.entries(accounts)
-          .filter(([uid, account]) => uid !== activeUid && account && typeof account === "object")
-          .map(([, account]) => account)
-        : [];
-      const normalizedName = name.toLocaleLowerCase();
-      const nameAlreadyRegistered = otherAccounts.some((account) =>
-        typeof account.name === "string" && account.name.trim().toLocaleLowerCase() === normalizedName
-      );
-      const hasCadetNumber = category !== "Admin";
-      const numberAlreadyRegistered = hasCadetNumber && otherAccounts.some((account) =>
-        typeof account.cadetNumber === "string" && account.cadetNumber.trim() === cadetNumber
-      );
-      const accountAlreadyRegistered = hasCadetNumber && otherAccounts.some((account) =>
-        typeof account.name === "string"
-        && account.name.trim().toLocaleLowerCase() === normalizedName
-        && typeof account.cadetNumber === "string"
-        && account.cadetNumber.trim() === cadetNumber
-      );
-
-      if (accountAlreadyRegistered) {
-        registrationError.textContent = "Account already exists";
-        return;
-      }
-      if (numberAlreadyRegistered) {
-        registrationError.textContent = "This Cadet Number is already registered.";
-        return;
-      }
-      if (nameAlreadyRegistered) {
-        const nameFieldLabel = category === "Admin" ? "Name" : "Cadet Name";
-        registrationError.textContent = `This ${nameFieldLabel} is already registered.`;
-        return;
-      }
-
-      const salt = crypto.getRandomValues(new Uint8Array(16));
-      const passwordHash = await CadetLinkAuth.derivePasswordHash(password, CadetLinkAuth.bytesToBase64(salt), CadetLinkAuth.passwordIterations);
-      const passwordRecord = {
-        algorithm: "PBKDF2-SHA-256",
-        iterations: CadetLinkAuth.passwordIterations,
-        salt: CadetLinkAuth.bytesToBase64(salt),
-        hash: passwordHash
-      };
-      const cadetRef = database.ref(`cadets/${activeUid}`);
-      const registrationTime = new Date().toISOString();
-      const result = await cadetRef.transaction((current) => {
-        if (registrationMode === "new") {
-          if (current !== null) return;
-          return { name, cadetNumber: category === "Admin" ? "" : cadetNumber, category, password: passwordRecord, registeredAt: registrationTime };
-        }
-        if (!current || current.password?.hash) return;
-        return {
-          ...current,
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "register",
+          uid: activeUid,
           name,
-          cadetNumber: category === "Admin" ? "" : cadetNumber,
+          cadetNumber,
           category,
-          password: passwordRecord,
-          registeredAt: current.registeredAt || registrationTime
-        };
+          subcategory,
+          password
+        })
       });
-
-      if (!result.committed) {
-        registrationError.textContent = "This card was registered elsewhere. Scan it again to sign in.";
-        return;
-      }
-      const registeredCadet = result.snapshot.val();
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || "Could not save your registration.");
+      const registeredCadet = result.account;
       await sendLcdCommand("SIGNUP_SUCCESS", registeredCadet?.name || name);
       await new Promise((resolve) => window.setTimeout(resolve, 6000));
-      enterDashboard(activeUid, registeredCadet);
+      enterDashboard(result.uid, registeredCadet, result.token);
     } catch (error) {
       console.error("Cadet registration failed:", error);
       registrationError.textContent = error.message || "Could not save your registration. Please try again.";
@@ -341,9 +305,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function enterDashboard(uid, cadet) {
+  function enterDashboard(uid, cadet, accessToken) {
     setStatus("Access granted. Opening dashboard...", "registered");
-    CadetLinkAuth.enterDashboard(uid, cadet, "loading");
+    CadetLinkAuth.enterDashboard(uid, cadet, "loading", accessToken);
   }
 
   async function sendLcdCommand(command, name = "") {
@@ -367,13 +331,62 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateRegistrationCategoryFields() {
-    const isAdmin = registrationCategory.value === "Admin";
-    registrationForm.classList.toggle("is-admin-registration", isAdmin);
-    registrationNameLabel.textContent = isAdmin ? "Name" : "Cadet name";
-    registrationName.placeholder = isAdmin ? "" : "D/Cdt Lastname";
-    registrationNumberGroup.hidden = isAdmin;
-    registrationNumber.required = !isAdmin;
-    if (isAdmin) registrationNumber.value = "";
+    const category = registrationCategory.value;
+    const usesNameAndPassword = ["CCA", "CAA"].includes(category);
+    const subcategories = category === "CCA"
+      ? ["Nurse", "Galley", "CCO/TLU"]
+      : category === "CAA"
+        ? ["Instructor", "KRC"]
+        : [];
+    registrationForm.classList.toggle("is-staff-registration", usesNameAndPassword);
+    registrationNameLabel.textContent = usesNameAndPassword ? "Name" : "Cadet name";
+    registrationName.placeholder = usesNameAndPassword ? "" : "D/Cdt Lastname";
+    registrationNumberGroup.hidden = usesNameAndPassword;
+    registrationNumber.required = ["Normal Cadet", "CLC"].includes(category);
+    if (usesNameAndPassword) registrationNumber.value = "";
+    registrationSubcategoryGroup.hidden = subcategories.length === 0;
+    registrationSubcategory.replaceChildren();
+    if (subcategories.length) {
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Choose a section";
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      registrationSubcategory.append(placeholder);
+      subcategories.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        registrationSubcategory.append(option);
+      });
+    }
+    registrationSubcategory.required = subcategories.length > 0;
+  }
+
+  function updateLoginSubcategoryFields(category, subcategory) {
+    const subcategories = category === "CCA"
+      ? ["Nurse", "Galley", "CCO/TLU"]
+      : category === "CAA"
+        ? ["Instructor", "KRC"]
+        : [];
+    loginSubcategoryGroup.hidden = subcategories.length === 0;
+    loginSubcategory.replaceChildren();
+    if (subcategories.length) {
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Choose a section";
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      loginSubcategory.append(placeholder);
+      subcategories.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        loginSubcategory.append(option);
+      });
+      loginSubcategory.value = subcategory || "";
+    }
+    loginSubcategory.required = subcategories.length > 0;
   }
 
   function openModal(modal) {

@@ -3,6 +3,11 @@ const SESSION_KEY = "cadetlinkSession";
 const DASHBOARD_URLS = {
 	Admin: "Admin.html",
 	CLC: "../CLC%20Panel/CLCDashboard.html",
+	"CCA-CCO/TLU": "../CCA-CCO-TLU.html",
+	"CCA-Nurse": "../CCA-Nurse.html",
+	"CCA-Galley": "../CCA-Galley.html",
+	"CAA-Instructor": "../CAA-Instructor.html",
+	"CAA-KRC": "../CAA-KRC.html",
 	"Normal Cadet": "../Dashboard/Dashboard.html"
 };
 
@@ -14,14 +19,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		userSession = null;
 	}
 
-	if (!userSession || !userSession.uid) {
+	if (!userSession || !userSession.uid || !userSession.accessToken) {
 		window.location.replace("../Loading%20screen/Loadingscreen.html");
 		return;
 	}
-	if (userSession.category !== "Admin") {
-		const dashboardUrl = Object.hasOwn(DASHBOARD_URLS, userSession.category)
-			? DASHBOARD_URLS[userSession.category]
-			: DASHBOARD_URLS["Normal Cadet"];
+	const requiredCategory = document.body.dataset.requiredCategory || "Admin";
+	const requiredSubcategory = document.body.dataset.requiredSubcategory || "";
+	if (userSession.category !== requiredCategory
+		|| (requiredSubcategory && userSession.subcategory !== requiredSubcategory)) {
+		const role = `${userSession.category}-${userSession.subcategory || ""}`;
+		const dashboardUrl = DASHBOARD_URLS[role] || DASHBOARD_URLS[userSession.category] || DASHBOARD_URLS["Normal Cadet"];
 		window.location.replace(dashboardUrl);
 		return;
 	}
@@ -30,9 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const logoutButton = document.getElementById("logoutBtn");
 	logoutButton?.addEventListener("click", () => {
-		const returnPath = userSession.entryPoint === "index"
-			? "../index.html"
-			: "../Loading%20screen/Loadingscreen.html";
+		const returnPath = userSession.entryPoint === "admin-access"
+			? "../admin-access.html"
+			: userSession.entryPoint === "index"
+				? "../index.html"
+				: "../Loading%20screen/Loadingscreen.html";
 		sessionStorage.removeItem(SESSION_KEY);
 		window.location.replace(returnPath);
 	});

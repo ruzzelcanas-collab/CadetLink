@@ -35,8 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
   } catch {
     userSession = null;
   }
-  if (!userSession || !userSession.uid) {
+  if (!userSession || !userSession.uid || !userSession.accessToken) {
     window.location.replace("../Loading%20screen/Loadingscreen.html");
+    return;
+  }
+  const requiredCategory = document.body.dataset.requiredCategory;
+  if (requiredCategory && userSession.category !== requiredCategory) {
+    window.location.replace("/index.html");
     return;
   }
 

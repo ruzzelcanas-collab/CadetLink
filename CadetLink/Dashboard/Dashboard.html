@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="DevilsReports.css" />
   <link rel="stylesheet" href="NmoChat.css" />
   <link rel="stylesheet" href="ProfilePicture.css" />
+  <link rel="stylesheet" href="ProfileSettings.css" />
+  <link rel="stylesheet" href="PortalSections.css" />
   <link rel="stylesheet" href="../Emergency%20Button/Emergencybutton.css" />
   <link rel="stylesheet" href="../Daily%20Duties/duties.css" />
   <link rel="stylesheet" href="../responsive.css" />
@@ -24,7 +26,7 @@
   <script src="Announcements.js"></script>
   <script src="NightOrders.js"></script>
 </head>
-<body>
+<body data-required-category="Normal Cadet">
 
 
 
@@ -52,7 +54,7 @@
         <span class="brand-name">Cadet<span class="brand-accent">Link</span></span>
       </div>
       <div class="account-actions">
-        <button class="profile-picture-button" id="profilePictureButton" type="button" aria-label="Add profile picture">
+        <button class="profile-picture-button" id="profilePictureButton" type="button" aria-label="Open profile settings">
           <img id="profilePicturePreview" alt="" hidden />
           <span class="profile-picture-initials" id="profilePictureInitials">?</span>
         </button>
@@ -142,14 +144,14 @@
 
 
 <div class="announcements-grid user-announcements-grid">
-  <section class="announcements-section" aria-labelledby="generalAnnouncementsTitle">
+  <section class="announcements-section announcements-featured" aria-labelledby="generalAnnouncementsTitle">
     <header class="announcements-header">
       <span class="announcements-icon" aria-hidden="true">📢</span>
       <h2 id="generalAnnouncementsTitle" class="announcements-title">General Announcements</h2>
     </header>
     <div class="announcements-content" id="announcementsContainer"></div>
   </section>
-  <section class="announcements-section" aria-labelledby="clcAnnouncementsTitle">
+  <section class="announcements-section announcements-featured" aria-labelledby="clcAnnouncementsTitle">
     <header class="announcements-header clc-announcements-header">
       <span class="announcements-icon" aria-hidden="true">📢</span>
       <h2 id="clcAnnouncementsTitle" class="announcements-title">CLC Announcement</h2>
@@ -228,6 +230,74 @@
     <p class="nmo-chat-status" id="nmoChatStatus" role="status" aria-live="polite"></p>
   </section>
 </div>
+<div class="profile-settings-modal" id="profileSettingsModal" hidden>
+  <section class="profile-settings-dialog" role="dialog" aria-modal="true" aria-labelledby="profileSettingsTitle">
+    <header class="profile-settings-header">
+      <div>
+        <p class="profile-settings-eyebrow">ACCOUNT</p>
+        <h2 id="profileSettingsTitle">Profile settings</h2>
+        <p class="profile-settings-intro">Manage your profile details and sign-in security.</p>
+      </div>
+      <button class="profile-settings-close" id="closeProfileSettings" type="button" aria-label="Close profile settings">&times;</button>
+    </header>
+    <div class="profile-settings-identity">
+      <div class="profile-settings-avatar" id="profileSettingsAvatar" aria-hidden="true"></div>
+      <div class="profile-settings-identity-details">
+        <h3 id="profileSettingsName"></h3>
+        <p class="profile-settings-role" id="profileSettingsRole"></p>
+        <p class="profile-settings-cadet-number" id="profileSettingsCadetNumber"></p>
+      </div>
+      <div class="profile-settings-picture-actions">
+        <button class="profile-settings-picture" id="changeProfilePicture" type="button">Change profile photo</button>
+        <p class="profile-settings-status" id="profilePictureSaveStatus" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+    <form class="profile-settings-form profile-settings-card" id="profileDetailsForm">
+      <div class="profile-settings-card-heading">
+        <div>
+          <h3>Profile details</h3>
+          <p>Keep your cadet information up to date.</p>
+        </div>
+        <span class="profile-settings-card-icon" aria-hidden="true">01</span>
+      </div>
+      <div class="profile-settings-field">
+        <label for="profileSettingsSection">Section</label>
+        <input id="profileSettingsSection" name="section" maxlength="80" autocomplete="organization-title" />
+      </div>
+      <div class="profile-settings-form-actions">
+        <p class="profile-settings-status" id="profileDetailsStatus" role="status" aria-live="polite"></p>
+        <button type="submit">Save details</button>
+      </div>
+    </form>
+    <form class="profile-settings-form profile-settings-card" id="profilePasswordForm">
+      <div class="profile-settings-card-heading">
+        <div>
+          <h3>Password &amp; security</h3>
+          <p>Choose a password with at least 8 characters.</p>
+        </div>
+        <span class="profile-settings-card-icon" aria-hidden="true">02</span>
+      </div>
+      <div class="profile-settings-field">
+        <label for="profileCurrentPassword">Current password</label>
+        <input id="profileCurrentPassword" name="currentPassword" type="password" autocomplete="current-password" required />
+      </div>
+      <div class="profile-settings-password-fields">
+        <div class="profile-settings-field">
+          <label for="profileNewPassword">New password</label>
+          <input id="profileNewPassword" name="newPassword" type="password" minlength="8" maxlength="200" autocomplete="new-password" required />
+        </div>
+        <div class="profile-settings-field">
+          <label for="profileConfirmPassword">Confirm new password</label>
+          <input id="profileConfirmPassword" name="confirmPassword" type="password" minlength="8" maxlength="200" autocomplete="new-password" required />
+        </div>
+      </div>
+      <div class="profile-settings-form-actions">
+        <p class="profile-settings-status" id="profilePasswordStatus" role="status" aria-live="polite"></p>
+        <button type="submit">Update password</button>
+      </div>
+    </form>
+  </section>
+</div>
 </div>
 <aside class="night-orders-sidebar" aria-labelledby="nightOrdersTitle">
   <section class="announcements-section night-orders-section" aria-labelledby="nightOrdersTitle">
@@ -243,6 +313,9 @@
 </div>
   </main>
   <script src="ProfilePicture.js"></script>
+  <script src="PortalSections.js"></script>
+  <script src="CadetPortal.js"></script>
+  <script src="ProfileSettings.js"></script>
   <script src="Dashboard.js"></script>
   <script src="../Daily%20Duties/duties.js"></script>
   <script src="../Emergency%20Button/Emergencybutton.js"></script>

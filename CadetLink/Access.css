@@ -14,6 +14,17 @@
   width: min(100%, 460px);
 }
 
+.admin-access-shell {
+  width: min(100%, 520px);
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.admin-setup-card {
+  border-color: #bfdbfe;
+}
+
 .access-card {
   box-sizing: border-box;
   padding: 2.1rem;
@@ -97,6 +108,23 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+.access-card .field-hint {
+  display: block;
+  margin-top: 0.35rem;
+  color: #64748b;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.scan-admin-card-button {
+  margin-top: 0.55rem;
+}
+
+.scan-admin-card-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .form-error {
   min-height: 1.2rem;
   margin: 0.75rem 0 0;
@@ -128,6 +156,24 @@
   color: #b91c1c;
   font-size: 0.82rem;
   text-align: center;
+}
+
+.access-status[data-state="success"] {
+  color: #15803d;
+}
+
+.admin-access-link {
+  display: block;
+  margin: 1rem 0 0;
+  color: #1e40af;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.admin-access-link:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 480px) {

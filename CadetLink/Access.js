@@ -1,6 +1,8 @@
 function initializeAccess() {
   const signInForm = document.getElementById("signInForm");
   const signInRole = document.getElementById("signInRole");
+  const signInSubcategory = document.getElementById("signInSubcategory");
+  const signInSubcategoryGroup = document.getElementById("signInSubcategoryGroup");
   const signInName = document.getElementById("signInName");
   const signInNumber = document.getElementById("signInNumber");
   const signInNumberGroup = document.getElementById("signInNumberGroup");
@@ -8,10 +10,6 @@ function initializeAccess() {
   const signInError = document.getElementById("signInError");
   const accessStatus = document.getElementById("accessStatus");
 
-  if (!window.firebase || typeof firebase.database !== "function") {
-    accessStatus.textContent = "Firebase did not load. Refresh this page to try again.";
-    return;
-  }
   if (!window.CadetLinkAuth) {
     accessStatus.textContent = "Account access could not be initialized. Refresh this page to try again.";
     return;
@@ -21,24 +19,34 @@ function initializeAccess() {
     return;
   }
 
-  if (!firebase.apps.length) firebase.initializeApp(CadetLinkAuth.firebaseConfig);
-  const cadetsRef = firebase.database().ref("cadets");
-
   signInRole.addEventListener("change", updateSignInFields);
   signInForm.addEventListener("submit", signIn);
   updateSignInFields();
 
   function updateSignInFields() {
-    const isAdmin = signInRole.value === "Admin";
-    signInNumberGroup.hidden = isAdmin;
-    signInNumber.required = !isAdmin;
+    const category = signInRole.value;
+    const usesNameAndPassword = ["CCA", "CAA"].includes(category);
+    signInNumberGroup.hidden = usesNameAndPassword;
+    signInNumber.required = !usesNameAndPassword;
+    const subcategories = category === "CCA"
+      ? ["Nurse", "Galley", "CCO/TLU"]
+      : category === "CAA"
+        ? ["Instructor", "KRC"]
+        : [];
+    signInSubcategoryGroup.hidden = subcategories.length === 0;
+    signInSubcategory.replaceChildren(...subcategories.map((subcategory) => {
+      const option = document.createElement("option");
+      option.value = subcategory;
+      option.textContent = subcategory;
+      return option;
+    }));
+    signInSubcategory.required = subcategories.length > 0;
   }
 
   async function signIn(event) {
     event.preventDefault();
     const name = signInName.value.trim();
     const selectedCategory = signInRole.value;
-    const isAdmin = selectedCategory === "Admin";
     const cadetNumber = signInNumber.value.trim();
     const password = signInPassword.value;
     const submitButton = signInForm.querySelector("button[type=submit]");
@@ -49,38 +57,21 @@ function initializeAccess() {
     submitButton.textContent = "Checking...";
 
     try {
-      const lookupField = isAdmin ? "name" : "cadetNumber";
-      const lookupValue = isAdmin ? name : cadetNumber;
-      const matchesSnapshot = await cadetsRef.orderByChild(lookupField).equalTo(lookupValue).once("value");
-      const matches = [];
-      matchesSnapshot.forEach((childSnapshot) => {
-        const account = childSnapshot.val();
-        if (!account || typeof account !== "object") return;
-
-        const category = CadetLinkAuth.normalizeUserCategory(account.category);
-        const nameMatches = typeof account.name === "string"
-          && account.name.trim().toLocaleLowerCase() === name.toLocaleLowerCase();
-        const accountMatches = isAdmin
-          ? category === selectedCategory && nameMatches
-          : category === selectedCategory
-            && nameMatches
-            && typeof account.cadetNumber === "string"
-            && account.cadetNumber.trim() === cadetNumber;
-        if (accountMatches && account.password?.hash && account.password?.salt) {
-          matches.push({ uid: childSnapshot.key, account });
-        }
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "login",
+          category: selectedCategory,
+          subcategory: signInSubcategory.value,
+          name,
+          cadetNumber,
+          password
+        })
       });
-
-      for (const match of matches) {
-        const credential = match.account.password;
-        const actualHash = await CadetLinkAuth.derivePasswordHash(password, credential.salt, credential.iterations);
-        if (CadetLinkAuth.constantTimeEqual(actualHash, credential.hash)) {
-          CadetLinkAuth.enterDashboard(match.uid, match.account, "index");
-          return;
-        }
-      }
-
-      signInError.textContent = "The account details or password did not match. Check them and try again.";
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || "Could not verify your account. Try again.");
+      CadetLinkAuth.enterDashboard(result.uid, result.account, "index", result.token);
     } catch (error) {
       console.error("Sign in failed:", error);
       signInError.textContent = "Could not verify your account. Check your connection and try again.";

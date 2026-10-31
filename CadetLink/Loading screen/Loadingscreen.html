@@ -12,8 +12,6 @@
   <link rel="stylesheet" href="Loadingscreen.css" />
   <link rel="stylesheet" href="../pwa-install.css" />
   <link rel="stylesheet" href="../responsive.css" />
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   <script src="auth-utils.js"></script>
 </head>
 <body>
@@ -52,9 +50,13 @@
         <strong id="loginCadetName">Cadet</strong>
         <span id="loginCadetNumber"></span>
       </div>
+      <div class="form-group" id="loginSubcategoryGroup" hidden>
+        <label for="loginSubcategory">Account section</label>
+        <select id="loginSubcategory"></select>
+      </div>
       <div class="form-group">
         <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" autocomplete="current-password" required />
+        <input type="password" id="loginPassword" autocomplete="current-password" maxlength="200" required />
       </div>
       <p class="form-error" id="loginError" role="alert"></p>
       <div class="dialog-actions">
@@ -75,6 +77,19 @@
       </div>
       <p class="dialog-description" id="registrationDescription">Add the cadet details and choose a password to register.</p>
       <div class="scanned-uid"><span>Scanned UID</span><strong id="registrationUid">---</strong></div>
+      <div class="form-group">
+        <label for="registrationCategory">Account category</label>
+        <select id="registrationCategory" required>
+          <option value="Normal Cadet">Normal Cadet</option>
+          <option value="CLC">CLC</option>
+          <option value="CCA">CCA</option>
+          <option value="CAA">CAA</option>
+        </select>
+      </div>
+      <div class="form-group" id="registrationSubcategoryGroup" hidden>
+        <label for="registrationSubcategory">Section</label>
+        <select id="registrationSubcategory"></select>
+      </div>
       <div class="form-group" id="registrationNameGroup">
         <label for="registrationName" id="registrationNameLabel">Cadet name</label>
         <input type="text" id="registrationName" autocomplete="name" maxlength="100" placeholder="D/Cdt Lastname" required />
@@ -83,17 +98,9 @@
         <label for="registrationNumber">Cadet number</label>
         <input type="text" id="registrationNumber" autocomplete="off" maxlength="40" required />
       </div>
-      <div class="form-group">
-        <label for="registrationCategory">Account category</label>
-        <select id="registrationCategory" required>
-          <option value="Normal Cadet">Normal Cadet</option>
-          <option value="CLC">CLC</option>
-          <option value="Admin">Admin</option>
-        </select>
-      </div>
       <div class="form-group" id="registrationPasswordGroup">
         <label for="registrationPassword">Password</label>
-        <input type="password" id="registrationPassword" autocomplete="new-password" minlength="8" required />
+        <input type="password" id="registrationPassword" autocomplete="new-password" minlength="8" maxlength="200" required />
         <span class="field-hint">Use at least 8 characters.</span>
       </div>
       <p class="form-error" id="registrationError" role="alert"></p>

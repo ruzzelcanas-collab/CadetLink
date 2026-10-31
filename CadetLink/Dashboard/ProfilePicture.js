@@ -1,13 +1,3 @@
-const PROFILE_PICTURE_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCsBK8esC6Nwd-xp2cce9UtKi5xDEhWwgY",
-  authDomain: "cadetlink-d53c4.firebaseapp.com",
-  databaseURL: "https://cadetlink-d53c4-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "cadetlink-d53c4",
-  storageBucket: "cadetlink-d53c4.firebasestorage.app",
-  messagingSenderId: "936082286663",
-  appId: "1:936082286663:web:9406ef4ee08c9ca7efe962",
-  measurementId: "G-L6SQ6ZW1XY"
-};
 const PROFILE_PICTURE_MAX_FILE_SIZE = 10 * 1024 * 1024;
 const PROFILE_PICTURE_MAX_DATA_LENGTH = 120_000;
 
@@ -78,7 +68,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!userSession?.uid) return;
 
   function renderProfilePicture(picture) {
-    pictureButton.setAttribute("aria-label", `Change profile picture for ${userSession.name || "your account"}`);
+    const opensProfileSettings = Boolean(document.getElementById("profileSettingsModal"));
+    pictureButton.setAttribute(
+      "aria-label",
+      opensProfileSettings
+        ? `Open profile settings for ${userSession.name || "your account"}`
+        : `Change profile picture for ${userSession.name || "your account"}`
+    );
     if (window.CadetLinkProfilePictures.isValidPicture(picture)) {
       picturePreview.src = picture;
       picturePreview.hidden = false;
@@ -101,7 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   renderProfilePicture(userSession.profilePicture);
-  pictureButton.addEventListener("click", () => pictureInput.click());
+  pictureButton.addEventListener("click", () => {
+    if (window.CadetLinkProfileSettings) window.CadetLinkProfileSettings.open();
+    else pictureInput.click();
+  });
   pictureInput.addEventListener("change", async () => {
     const file = pictureInput.files?.[0];
     pictureInput.value = "";
@@ -115,26 +114,45 @@ document.addEventListener("DOMContentLoaded", () => {
       status.textContent = "Choose an image smaller than 10 MB.";
       return;
     }
-    if (!window.firebase || typeof firebase.database !== "function") {
-      status.textContent = "Profile pictures are unavailable because Firebase did not load.";
-      return;
-    }
-
     pictureButton.disabled = true;
     pictureButton.title = "Saving profile picture";
     status.textContent = "Saving profile picture...";
+    const settingsStatus = document.getElementById("profilePictureSaveStatus");
+    if (settingsStatus) {
+      settingsStatus.textContent = "Saving profile picture...";
+      settingsStatus.classList.remove("is-error");
+    }
     try {
       const picture = await compressProfilePicture(file);
-      if (!firebase.apps.length) firebase.initializeApp(PROFILE_PICTURE_FIREBASE_CONFIG);
-      await firebase.database().ref(`cadets/${userSession.uid}/profilePicture`).set(picture);
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userSession.accessToken}`
+        },
+        body: JSON.stringify({ action: "update-profile", profilePicture: picture })
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || "Could not save the profile picture.");
 
+      userSession = JSON.parse(sessionStorage.getItem("cadetlinkSession") || "null") || userSession;
       userSession.profilePicture = picture;
       sessionStorage.setItem("cadetlinkSession", JSON.stringify(userSession));
       renderProfilePicture(picture);
       status.textContent = "Profile picture updated.";
+      const settingsStatus = document.getElementById("profilePictureSaveStatus");
+      if (settingsStatus) {
+        settingsStatus.textContent = "Profile picture updated.";
+        settingsStatus.classList.remove("is-error");
+      }
     } catch (error) {
       console.error("Profile picture could not be saved:", error);
       status.textContent = error.message || "Could not save the profile picture. Check your connection and try again.";
+      const settingsStatus = document.getElementById("profilePictureSaveStatus");
+      if (settingsStatus) {
+        settingsStatus.textContent = status.textContent;
+        settingsStatus.classList.add("is-error");
+      }
     } finally {
       pictureButton.disabled = false;
     }

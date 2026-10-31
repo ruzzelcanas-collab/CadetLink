@@ -430,8 +430,8 @@ body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-#registrationForm.is-admin-registration #registrationNameGroup,
-#registrationForm.is-admin-registration #registrationPasswordGroup {
+#registrationForm.is-staff-registration #registrationNameGroup,
+#registrationForm.is-staff-registration #registrationPasswordGroup {
   width: 100%;
 }
 
