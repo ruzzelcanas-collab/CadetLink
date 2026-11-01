@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "functions": {
-    "api/nmo-chat.js": {
-      "includeFiles": "Dashboard/api/cmi.pdf"
-    }
-  }
-}
