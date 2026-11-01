@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="theme-color" content="#1e40af" />
+	<link rel="manifest" href="/manifest.webmanifest" />
+	<link rel="icon" href="/icons/cadetlink.svg" type="image/svg+xml" />
+	<link rel="apple-touch-icon" href="/icons/cadetlink-192.png" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>CadetLink - CCA Galley Dashboard</title>
+	<link rel="stylesheet" href="Admin Panel/Admin.css" />
+	<link rel="stylesheet" href="pwa-install.css" />
+	<link rel="stylesheet" href="Dashboard/ProfilePicture.css" />
+	<link rel="stylesheet" href="Dashboard/DevilsReports.css" />
+	<link rel="stylesheet" href="Dashboard/PortalSections.css" />
+	<link rel="stylesheet" href="Emergency%20Button/Emergencybutton.css" />
+	<link rel="stylesheet" href="responsive.css" />
+	<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+	<script src="Dashboard/Announcements.js"></script>
+</head>
+<body data-required-category="CCA" data-required-subcategory="Galley">
+	<header class="navbar">
+		<div class="nav-container">
+			<a class="brand-group" href="Dashboard/Dashboard.html" aria-label="CadetLink dashboard">
+				<span class="brand-icon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<rect x="2" y="5" width="20" height="14" rx="2"></rect>
+						<line x1="2" y1="10" x2="22" y2="10"></line>
+					</svg>
+				</span>
+				<span class="brand-name">Cadet<span class="brand-accent">Link</span></span>
+			</a>
+			<div class="account-actions">
+				<button class="profile-picture-button" id="profilePictureButton" type="button" aria-label="Add profile picture">
+					<img id="profilePicturePreview" alt="" hidden />
+					<span class="profile-picture-initials" id="profilePictureInitials">?</span>
+				</button>
+				<input id="profilePictureInput" type="file" accept="image/*" hidden />
+				<span class="profile-picture-status" id="profilePictureStatus" role="status" aria-live="polite"></span>
+				<button class="logout-btn" id="logoutBtn" type="button">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+						<polyline points="16 17 21 12 16 7"></polyline>
+						<line x1="21" y1="12" x2="9" y2="12"></line>
+					</svg>
+					<span>Log out</span>
+				</button>
+			</div>
+		</div>
+	</header>
+
+	<main class="admin-body">
+		<div class="admin-dashboard-grid">
+		<section class="announcements-section admin-announcement-section" aria-labelledby="announcementsTitle">
+			<header class="announcements-header">
+				<span class="announcements-icon" aria-hidden="true">📢</span>
+				<h1 id="announcementsTitle" class="announcements-title">Announcements Control Panel</h1>
+			</header>
+
+			<div class="announcements-content">
+				<form class="announcement-form" id="announcementForm">
+					<h2 class="form-title">Write an announcement</h2>
+					<label for="announcementTitle">Title</label>
+					<input id="announcementTitle" name="title" type="text" maxlength="100" required />
+					<label for="announcementMessage">Message</label>
+					<textarea id="announcementMessage" name="message" rows="5" maxlength="2000" required></textarea>
+					<div class="form-actions">
+						<button class="publish-button" id="publishButton" type="submit">Publish announcement</button>
+						<button class="cancel-button" id="cancelEditButton" type="button" hidden>Cancel edit</button>
+					</div>
+					<p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+				</form>
+
+				<section class="published-section" aria-labelledby="publishedTitle">
+					<div class="published-heading">
+						<h2 id="publishedTitle">Published announcements</h2>
+						<span class="announcement-count" id="announcementCount">0</span>
+					</div>
+					<div class="announcement-list" id="announcementList" aria-live="polite"></div>
+				</section>
+			</div>
+		</section>
+		<section class="announcements-section admin-nmo-section" aria-labelledby="adminNmoTitle">
+			<header class="announcements-header admin-nmo-header">
+				<span class="announcements-icon" aria-hidden="true">📁</span>
+				<h2 id="adminNmoTitle" class="announcements-title">Cadets NMO</h2>
+				<div class="admin-nmo-header-actions">
+					<button class="admin-nmo-history-button" id="openNmoForClc" type="button">NMO for CLC</button>
+					<button class="admin-nmo-history-button" id="openAdminNmoHistory" type="button">History</button>
+					<a class="admin-nmo-history-button" href="https://docs.google.com/spreadsheets/d/1pcaN-_WUZQscs2KiT05sKZkY-b5wwTNn92VwspWE_OU/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Google Spreadsheet</a>
+				</div>
+			</header>
+			<div class="admin-nmo-content">
+				<div class="admin-nmo-feed" id="adminNmoFeed" aria-live="polite">
+					<p class="admin-nmo-empty">No NMO slips have been submitted yet.</p>
+				</div>
+			</div>
+		</section>
+		<div class="admin-nmo-issue-modal" id="nmoForClcModal" hidden>
+			<section class="admin-nmo-issue-dialog" role="dialog" aria-modal="true" aria-labelledby="nmoForClcTitle">
+				<header class="admin-nmo-issue-header">
+					<h2 id="nmoForClcTitle">NMO for CLC</h2>
+					<button class="admin-nmo-history-close" id="closeNmoForClc" type="button" aria-label="Close NMO for CLC">&times;</button>
+				</header>
+				<form class="admin-nmo-issue-form" id="nmoForClcForm">
+					<p>Submit an NMO picture for a registered CLC user. Confirming will approve it immediately and include it in the NMO spreadsheet sync.</p>
+					<label for="nmoForClcName">CLC user's registered name</label>
+					<input id="nmoForClcName" name="clcName" type="text" maxlength="100" autocomplete="off" required />
+					<label for="nmoForClcPicture">NMO picture</label>
+					<input id="nmoForClcPicture" name="picture" type="file" accept="image/*" required />
+					<p class="admin-nmo-issue-status" id="nmoForClcStatus" role="status" aria-live="polite"></p>
+					<div class="admin-nmo-issue-actions">
+						<button class="admin-nmo-submit" id="submitNmoForClc" type="submit">Confirm and approve</button>
+						<button class="admin-nmo-history-button admin-nmo-cancel" id="cancelNmoForClc" type="button">Cancel</button>
+					</div>
+				</form>
+			</section>
+		</div>
+		<section class="announcements-section admin-night-orders-section" aria-labelledby="adminNightOrdersTitle">
+			<header class="announcements-header admin-night-orders-header">
+				<span class="announcements-icon" aria-hidden="true">🌙</span>
+				<h2 id="adminNightOrdersTitle" class="announcements-title">Night Orders</h2>
+			</header>
+			<div class="admin-night-orders-content">
+				<form class="admin-night-orders-form" id="nightOrdersForm">
+					<label for="nightOrdersText">Night Orders schedule</label>
+					<p class="night-orders-help" id="nightOrdersHelp">Enter the schedule as plain text, with each date and activity on its own line.</p>
+					<textarea id="nightOrdersText" name="nightOrders" rows="20" maxlength="20000" aria-describedby="nightOrdersHelp" placeholder="NIGHT ORDERS&#10;&#10;Year Month Day, (Monday - Sunday)&#10;&#10;Time: Description of Activity&#10;&#10;Time: Description of Activity" required></textarea>
+					<button class="admin-night-orders-publish" id="publishNightOrders" type="submit">Publish Night Orders</button>
+					<p class="admin-night-orders-status" id="nightOrdersStatus" role="status" aria-live="polite"></p>
+				</form>
+			</div>
+		</section>
+		<section class="announcements-section admin-devils-report-section" aria-labelledby="adminDevilsReportTitle">
+			<header class="announcements-header devils-report-header">
+				<span class="announcements-icon" aria-hidden="true">🚨</span>
+				<h2 id="adminDevilsReportTitle" class="announcements-title">DEVILS REPORT</h2>
+			</header>
+			<div class="announcements-content devils-report-content">
+				<div class="devils-report-columns">
+					<form class="devils-report-form" id="devilsReportForm">
+						<h3>Send a report</h3>
+						<label for="devilsReportPicture">Picture</label>
+						<input id="devilsReportPicture" name="picture" type="file" accept="image/*" required />
+						<label for="devilsReportDescription">Description</label>
+						<textarea id="devilsReportDescription" name="description" rows="3" maxlength="1000" required></textarea>
+						<label for="devilsReportPlace">Place</label>
+						<input id="devilsReportPlace" name="place" type="text" maxlength="160" required />
+						<button class="devils-report-send" id="devilsReportSend" type="submit">Send report</button>
+						<p class="devils-report-status" id="devilsReportStatus" role="status" aria-live="polite"></p>
+					</form>
+				<section class="admin-devils-report-sent" aria-labelledby="adminDevilsReportsSentTitle">
+					<h3 id="adminDevilsReportsSentTitle">Sent reports</h3>
+					<div class="devils-report-feed" id="devilsReportContainer" aria-live="polite"></div>
+					<p class="devils-report-admin-status" id="devilsReportAdminStatus" role="status" aria-live="polite"></p>
+				</section>
+				</div>
+			</div>
+		</section>
+		</div>
+	</main>
+	<div class="admin-nmo-history-modal" id="adminNmoHistoryModal" hidden>
+		<section class="admin-nmo-history-dialog" role="dialog" aria-modal="true" aria-labelledby="adminNmoHistoryTitle">
+			<header class="admin-nmo-history-header">
+				<h2 id="adminNmoHistoryTitle">NMO History</h2>
+				<button class="admin-nmo-history-close" id="closeAdminNmoHistory" type="button" aria-label="Close NMO history">&times;</button>
+			</header>
+			<div class="admin-nmo-history-content">
+				<div class="admin-nmo-history-actions">
+					<button class="admin-nmo-history-clear" id="clearAdminNmoHistory" type="button">Clear all</button>
+					<p class="admin-nmo-history-clear-status" id="clearAdminNmoHistoryStatus" role="status" aria-live="polite"></p>
+				</div>
+				<div class="admin-nmo-history-list" id="adminNmoHistoryList" aria-live="polite"></div>
+			</div>
+		</section>
+	</div>
+	<div class="admin-image-viewer" id="adminImageViewer" hidden>
+		<section class="admin-image-viewer-dialog" role="dialog" aria-modal="true" aria-label="Attached picture">
+			<button class="admin-image-viewer-close" id="closeAdminImageViewer" type="button" aria-label="Close picture">&times;</button>
+			<img class="admin-image-viewer-picture" id="adminImageViewerPicture" alt="" />
+		</section>
+	</div>
+	<script src="Dashboard/ProfilePicture.js"></script>
+	<script src="Dashboard/NightOrders.js"></script>
+	<script src="Dashboard/PortalSections.js"></script>
+	<script src="Dashboard/StaffDashboard.js"></script>
+	<script src="Emergency%20Button/Emergencybutton.js"></script>
+	<script src="Dashboard/DevilsReports.js"></script>
+	
+	<script src="responsive-sections.js"></script>
+	<script src="pwa-install.js"></script>
+</body>
+</html>
