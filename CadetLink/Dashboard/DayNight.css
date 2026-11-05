@@ -1,0 +1,272 @@
+.day-night-control {
+  position: fixed;
+  z-index: 99997;
+  right: 1rem;
+  bottom: 4rem;
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.18);
+}
+
+.day-night-button {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #475569;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.day-night-button[aria-pressed="true"] {
+  background: #1e40af;
+  color: #ffffff;
+}
+
+.day-night-button:hover:not([aria-pressed="true"]) {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.day-night-button:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+
+body[data-theme="night"] {
+  background-color: #0b1220;
+  color: #e2e8f0;
+  color-scheme: dark;
+}
+
+body[data-theme="night"] .navbar {
+  background-color: #111c32;
+  border-bottom-color: #263754;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+}
+
+body[data-theme="night"] .logout-btn {
+  color: #e2e8f0;
+  border-color: #64748b;
+}
+
+body[data-theme="night"] .logout-btn:hover {
+  background-color: #263754;
+  border-color: #94a3b8;
+}
+
+body[data-theme="night"] .announcements-section,
+body[data-theme="night"] .stat-card,
+body[data-theme="night"] .duties-btn,
+body[data-theme="night"] .duties-collapse-wrapper,
+body[data-theme="night"] .clc-editor {
+  background-color: #172338;
+  border-color: #34445e;
+  color: #e2e8f0;
+}
+
+body[data-theme="night"] .announcements-content,
+body[data-theme="night"] .nmo-record-panel p,
+body[data-theme="night"] .devils-report-form label,
+body[data-theme="night"] .clc-announcement-form label,
+body[data-theme="night"] .nmo-issued-form label,
+body[data-theme="night"] .nmo-confirmation-content > p:first-child,
+body[data-theme="night"] .night-order-details,
+body[data-theme="night"] .night-order-note {
+  color: #d5deeb;
+}
+
+body[data-theme="night"] .dashboard-announcement,
+body[data-theme="night"] .nmo-record-history,
+body[data-theme="night"] .nmo-control-approved,
+body[data-theme="night"] .clc-published {
+  border-color: #34445e;
+}
+
+body[data-theme="night"] .dashboard-announcement h3,
+body[data-theme="night"] .welcome-text h1,
+body[data-theme="night"] .welcome-text p,
+body[data-theme="night"] .nmo-record-panel h3,
+body[data-theme="night"] .nmo-issued-form h3,
+body[data-theme="night"] .nmo-control-record-panel h3,
+body[data-theme="night"] .clc-announcement-form h3,
+body[data-theme="night"] .clc-published-heading h3,
+body[data-theme="night"] .night-order-date {
+  color: #c4b5fd;
+}
+
+body[data-theme="night"] .dashboard-announcement-date,
+body[data-theme="night"] .user-status,
+body[data-theme="night"] .stat-details h3,
+body[data-theme="night"] .night-orders-empty {
+  color: #94a3b8;
+}
+
+body[data-theme="night"] .welcome-card {
+  background: linear-gradient(135deg, #172338 0%, #1e3150 100%);
+  border-color: #34445e;
+}
+
+body[data-theme="night"] .stat-value,
+body[data-theme="night"] .user-name {
+  color: #f1f5f9;
+}
+
+body[data-theme="night"] .duties-btn {
+  color: #f1f5f9;
+}
+
+body[data-theme="night"] .duties-btn .duties-title {
+  color: #f1f5f9;
+}
+
+body[data-theme="night"] .duties-btn .duties-icon {
+  color: #bfdbfe;
+}
+
+body[data-theme="night"] .duties-btn:hover,
+body[data-theme="night"] .duties-btn.active {
+  background-color: #1e3150;
+  border-color: #456187;
+}
+
+body[data-theme="night"] .chevron-icon {
+  color: #93c5fd;
+}
+
+body[data-theme="night"] .duty-card,
+body[data-theme="night"] .nmo-user-record,
+body[data-theme="night"] .nmo-record-empty,
+body[data-theme="night"] .nmo-control-empty,
+body[data-theme="night"] .night-order-day,
+body[data-theme="night"] .clc-announcement-item,
+body[data-theme="night"] .clc-empty-announcements,
+body[data-theme="night"] .devils-report-card,
+body[data-theme="night"] .nmo-history-item {
+  background-color: #1e2c43;
+  border-color: #3a4c68;
+  color: #d5deeb;
+}
+
+body[data-theme="night"] .nmo-record-empty {
+  color: #c4b5fd !important;
+}
+
+body[data-theme="night"] .devils-report-description,
+body[data-theme="night"] .admin-nmo-card-info {
+  color: #e2e8f0;
+}
+
+body[data-theme="night"] .devils-report-place {
+  background-color: #351e31;
+  border-top-color: #5b344e;
+  color: #fecdd3;
+}
+
+body[data-theme="night"] .duty-value,
+body[data-theme="night"] .nmo-user-cadet-name,
+body[data-theme="night"] .clc-announcement-item h4,
+body[data-theme="night"] .clc-announcement-message {
+  color: #e2e8f0;
+}
+
+body[data-theme="night"] .duty-role-badge.is-cmi {
+  background-color: #134e4a;
+  color: #ccfbf1;
+}
+
+body[data-theme="night"] .duty-role-badge.is-bread,
+body[data-theme="night"] .duty-role-badge.is-details {
+  background-color: #7c2d12;
+  color: #ffedd5;
+}
+
+body[data-theme="night"] .duty-role-badge.is-watcher {
+  background-color: #14532d;
+  color: #dcfce7;
+}
+
+body[data-theme="night"] .duty-label,
+body[data-theme="night"] .nmo-user-image-empty,
+body[data-theme="night"] .nmo-user-record-date,
+body[data-theme="night"] .nmo-history-date,
+body[data-theme="night"] .nmo-history-cadet,
+body[data-theme="night"] .clc-announcement-date {
+  color: #a6b4c8;
+}
+
+body[data-theme="night"] .nmo-user-picture-wrap,
+body[data-theme="night"] .nmo-history-picture,
+body[data-theme="night"] .devils-report-picture,
+body[data-theme="night"] .devils-report-no-picture {
+  background-color: #101a2b;
+}
+
+body[data-theme="night"] .devils-report-form input,
+body[data-theme="night"] .devils-report-form textarea,
+body[data-theme="night"] .clc-announcement-form input,
+body[data-theme="night"] .clc-announcement-form textarea,
+body[data-theme="night"] .nmo-issued-form input {
+  background-color: #101a2b;
+  border-color: #475873;
+  color: #e2e8f0;
+}
+
+body[data-theme="night"] .devils-report-form input::file-selector-button {
+  border: 1px solid #475873;
+  border-radius: 5px;
+  background-color: #263754;
+  color: #e2e8f0;
+}
+
+body[data-theme="night"] .night-order-entry {
+  border-top-color: #34445e;
+}
+
+body[data-theme="night"] .night-order-time {
+  color: #c4b5fd;
+}
+
+body[data-theme="night"] .day-night-control {
+  background-color: #172338;
+  border-color: #475873;
+}
+
+body[data-theme="night"] .day-night-button {
+  color: #cbd5e1;
+}
+
+body[data-theme="night"] .day-night-button[aria-pressed="true"] {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+body[data-theme="night"] .day-night-button:hover:not([aria-pressed="true"]) {
+  background: #263754;
+  color: #ffffff;
+}
+
+@media (max-width: 560px) {
+  .day-night-control {
+    right: 0.5rem;
+    bottom: 3.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .day-night-button {
+    transition: none;
+  }
+}
