@@ -1,0 +1,173 @@
+/* Side-by-side accordion layout */
+.duties-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+/* Container Spacing */
+.duties-section {
+  margin-top: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .duties-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .duties-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Daily Duties Accordion Button */
+.duties-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  min-height: 96px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e40af;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.duties-btn:hover {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.duties-btn-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.duties-icon {
+  font-size: 1.2rem;
+}
+
+/* Chevron Arrow & Rotation Animation */
+.chevron-icon {
+  color: #2563eb;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.duties-btn.active .chevron-icon {
+  transform: rotate(180deg);
+}
+
+.duties-btn.active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-color: #bfdbfe;
+  background-color: #eff6ff;
+}
+
+/* Smooth Height Collapse/Expand Wrapper */
+.duties-collapse-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #ffffff;
+  border: 1px solid #bfdbfe;
+  border-top: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.duties-content-box {
+  padding: 1.25rem;
+}
+
+.duty-card {
+  padding: 0.9rem 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #2563eb;
+  border-radius: 8px;
+}
+
+.duty-card + .duty-card {
+  margin-top: 0.75rem;
+}
+
+.duty-row {
+  display: grid;
+  grid-template-columns: 4.25rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.duty-row + .duty-row {
+  border-top: 1px solid #e8edf4;
+}
+
+.duty-label {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.duty-value {
+  min-width: 0;
+  color: #1e293b;
+  font-size: 0.88rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.duty-role-badge {
+  justify-self: start;
+  padding: 0.15rem 0.5rem;
+  color: #1e40af;
+  background-color: #dbeafe;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+.duty-role-badge.is-cmi {
+  color: #0f766e;
+  background-color: #ccfbf1;
+}
+
+.duty-role-badge.is-bread {
+  color: #9a3412;
+  background-color: #ffedd5;
+}
+
+.duty-role-badge.is-watcher {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+.duty-role-badge.is-details {
+  color: #9a3412;
+  background-color: #ffedd5;
+}
+
+/* Blank Data Placeholder Styling */
+.placeholder-text {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.placeholder-text.is-error {
+  color: #b91c1c;
+}
