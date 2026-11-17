@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CadetLink - NYK-TDG Maritime Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-sky: #0284C7;
+      --primary-sky-hover: #0369A1;
+      --sky-light: #E0F2FE;
+      --sky-bg: #F0F9FF;
+      --navy-dark: #1E3A8A;
+      --card-bg: #FFFFFF;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--sky-bg);
+      color: var(--text-dark);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* --- SIDEBAR NAVIGATION --- */
+    aside {
+      width: var(--sidebar-width);
+      background-color: var(--card-bg);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .brand-text h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      line-height: 1.2;
+    }
+
+    .brand-text span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-menu {
+      list-style: none;
+      padding: 16px 12px;
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .nav-section-title {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.8px;
+      padding: 12px 12px 6px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      margin-bottom: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      color: var(--text-dark);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background-color: var(--sky-light);
+      color: var(--primary-sky-hover);
+    }
+
+    .nav-link.active {
+      background-color: var(--primary-sky);
+      color: white;
+    }
+
+    .nav-link svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .user-profile {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--sky-light);
+      color: var(--primary-sky);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .user-details h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .user-details p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .logout-btn:hover {
+      color: #EF4444;
+    }
+
+    /* --- MAIN CONTENT AREA --- */
+    main {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+      padding: 24px 32px;
+      max-width: 1400px;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .top-header h2 {
+      font-size: 1.4rem;
+      color: var(--navy-dark);
+    }
+
+    /* --- TOP COLLAPSIBLE CARDS GRID --- */
+    .top-duties-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .collapsible-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .collapsible-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .collapsible-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .collapsible-header-left span.icon {
+      font-size: 1.2rem;
+    }
+
+    .collapsible-header-left h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--navy-dark);
+    }
+
+    .arrow-icon {
+      width: 16px;
+      height: 16px;
+      stroke: var(--text-muted);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* --- MAIN DASHBOARD LAYOUT --- */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .announcements-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .banner-card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .banner-header {
+      padding: 14px 20px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .banner-header.blue {
+      background-color: #1D4ED8;
+    }
+
+    .banner-header.teal {
+      background-color: #0D9488;
+    }
+
+    .banner-body {
+      padding: 24px 20px;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* --- NIGHT ORDERS SIDE PANEL --- */
+    .side-panel-card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background-color: #1D4ED8;
+      color: white;
+      padding: 14px 20px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .date-heading {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--navy-dark);
+      margin-bottom: 12px;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 12px;
+      font-size: 0.8rem;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-time {
+      font-weight: 700;
+      color: var(--primary-sky);
+      min-width: 80px;
+    }
+
+    .timeline-desc {
+      color: var(--text-dark);
+    }
+
+    /* Toggle Mode Footer */
+    .mode-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .mode-btn {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      color: var(--text-muted);
+    }
+
+    .mode-btn.active {
+      background-color: #1D4ED8;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside>
+    <div class="brand">
+      <img class="brand-logo" src="icons/cadetlink-192.png" alt="CadetLink logo">
+      <div class="brand-text">
+        <h1>CadetLink</h1>
+        <span>NYK-TDG Academy</span>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="#" class="nav-link active">
+          <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home (Dashboard)
+        </a>
+      </li>
+
+      <div class="nav-section-title">Cadet Modules</div>
+
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Announcements
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          Night Orders
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          Cadet Fees (KRC)
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" x2="12" y1="18" y2="12"/><line x1="9" x2="15" y1="15" y2="15"/></svg>
+          Devil Report
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Infirmary Count
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/></svg>
+          Food Concerns
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 6H20"/></svg>
+          Book Issuing
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          NMO Personal Record
+        </a>
+      </li>
+    </ul>
+
+    <div class="user-profile">
+      <div class="profile-info">
+        <div class="avatar">CD</div>
+        <div class="user-details">
+          <h4>Cadet User</h4>
+          <p>Class of 2026</p>
+        </div>
+      </div>
+      <button class="logout-btn" title="Log out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main>
+    <div class="top-header">
+      <h2>Main Dashboard</h2>
+    </div>
+
+    <!-- THREE TOP COLLAPSIBLE BARS -->
+    <div class="top-duties-grid">
+      <div class="collapsible-card">
+        <div class="collapsible-header">
+          <div class="collapsible-header-left">
+            <span class="icon">📋</span>
+            <h3>Daily Duties</h3>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+
+      <div class="collapsible-card">
+        <div class="collapsible-header">
+          <div class="collapsible-header-left">
+            <span class="icon">📋</span>
+            <h3>CMI Extract & Daily Bread</h3>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+
+      <div class="collapsible-card">
+        <div class="collapsible-header">
+          <div class="collapsible-header-left">
+            <span class="icon">📋</span>
+            <h3>Studycall Watchers</h3>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN DASHBOARD SPLIT GRID -->
+    <div class="dashboard-layout">
+      <!-- LEFT ANNOUNCEMENTS SECTION -->
+      <div class="announcements-column">
+        <div class="banner-card">
+          <div class="banner-header blue">
+            📢 General Announcements
+          </div>
+          <div class="banner-body">
+            No announcements have been published yet.
+          </div>
+        </div>
+
+        <div class="banner-card">
+          <div class="banner-header teal">
+            📢 CLC Announcement
+          </div>
+          <div class="banner-body">
+            No announcements have been published yet.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT NIGHT ORDERS PANEL -->
+      <div class="side-panel-card">
+        <div class="panel-header">
+          🌙 Night Orders
+        </div>
+        <div class="panel-body">
+          <div class="date-heading">2026 Oct 27, Tuesday</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-time">1700H</span>
+              <span class="timeline-desc">Evening chow</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">1700H-1900H</span>
+              <span class="timeline-desc">Training with Ma'am Aguilar, DB and Stingray</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">1700H-1900H</span>
+              <span class="timeline-desc">Distribution of Re-ordered uniforms, Admin Bldg</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">1800H</span>
+              <span class="timeline-desc">Late chow and deadline of late lights application</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">1800H</span>
+              <span class="timeline-desc">Oral Prophylaxis (Betaizar, Jesthony T. report to Infirmary for list of cadets)</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">1800H-1930H</span>
+              <span class="timeline-desc">Psych test of aspirants, GCO</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- BOTTOM CORNER MODE TOGGLE -->
+  <div class="mode-toggle">
+    <button class="mode-btn">🌙 Night</button>
+    <button class="mode-btn active">☀️ Day</button>
+  </div>
+
+</body>
+</html>
