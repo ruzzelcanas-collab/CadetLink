@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "functions": {
+    "api/nmo-chat.js": {
+      "includeFiles": "Dashboard/api/cmi.pdf"
+    }
+  }
+}

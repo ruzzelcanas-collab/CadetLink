@@ -1,0 +1,872 @@
+:root {
+  --primary-sky: #0284C7;
+  --primary-sky-hover: #0369A1;
+  --sky-light: #E0F2FE;
+  --sky-bg: #F0F9FF;
+  --navy-dark: #1E3A8A;
+  --card-bg: #FFFFFF;
+  --text-dark: #0F172A;
+  --text-muted: #64748B;
+  --border-color: #E2E8F0;
+  --portal-sidebar-width: 260px;
+}
+
+/* Student-Friendly Bright CSS Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #ffffff; /* Requested white background */
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+/* Header Navbar Styles */
+.navbar {
+  background-color: #1e40af;
+  border-bottom: 2px solid #eff6ff;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+  max-width: 1800px;
+  min-height: 128px;
+  margin: 0 auto;
+  padding: 0.85rem clamp(1rem, 2vw, 2rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  color: #ffffff;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+}
+
+.logout-btn:focus-visible {
+  outline: 3px solid #bfdbfe;
+  outline-offset: 3px;
+}
+
+/* CadetLink Header Logo Design */
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: #ffffff;
+  padding: 0.45rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.brand-name {
+  font-size: 2.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.brand-accent {
+  color: #ffffff;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #1e40af;
+  background-color: #eff6ff;
+}
+
+/* Student Profile Chip */
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #f8fafc;
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.user-status {
+  font-size: 0.7rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* Dashboard Body Content */
+.dashboard-body {
+  max-width: 1644px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.dashboard-layout {
+  display: grid;
+  min-width: 1596px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  align-items: stretch;
+  gap: 1.5rem;
+}
+
+.dashboard-main-content,
+.night-orders-sidebar {
+  min-width: 0;
+}
+
+.night-orders-sidebar > .announcements-section {
+  height: 100%;
+  margin-top: 0;
+}
+
+.night-orders-section {
+  display: flex;
+  min-height: 620px;
+  flex-direction: column;
+}
+
+.night-orders-content {
+  flex: 1;
+}
+
+.announcements-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.user-announcements-grid {
+  grid-template-columns: minmax(0, 1.8fr) minmax(320px, 1fr);
+}
+
+.announcements-section {
+  min-width: 0;
+  min-height: 300px;
+  overflow: hidden;
+  background-color: #ffffff;
+  border: 1px solid #dbe3ef;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+}
+
+.announcements-featured {
+  display: flex;
+  min-height: 480px;
+  grid-column: 1 / -1;
+  flex-direction: column;
+}
+
+.announcements-featured .announcements-content {
+  flex: 1;
+}
+
+.announcements-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.75rem;
+  background-color: #1e40af;
+  border-bottom: 3px solid #0b0462ef;
+}
+
+.clc-announcements-header {
+  background-color: #0f766e;
+  border-bottom-color: #115e59;
+}
+
+.announcements-icon {
+  font-size: 1.5rem;
+}
+
+.announcements-title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.announcements-content {
+  min-height: 220px;
+  padding: 1.75rem;
+}
+
+.dashboard-announcement {
+  padding: 1rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dashboard-announcement:first-child {
+  padding-top: 0;
+}
+
+.dashboard-announcement h3 {
+  margin-bottom: 0.5rem;
+  color: #1e40af;
+  font-size: 1.1rem;
+}
+
+.dashboard-announcement p {
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.dashboard-announcement-date {
+  margin-top: 0.75rem;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+/* Friendly Welcome Card */
+.welcome-card {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid #bfdbfe;
+  padding: 2rem;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.welcome-text h1 {
+  color: #1e40af;
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.welcome-text p {
+  color: #3b82f6;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #1e40af;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Dashboard Quick Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.stat-icon.blue { background-color: #eff6ff; }
+.stat-icon.orange { background-color: #fff7ed; }
+.stat-icon.purple { background-color: #faf5ff; }
+
+.stat-details h3 {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 0.2rem;
+}
+
+.text-green {
+  color: #16a34a;
+}
+
+body[data-required-category="Normal Cadet"] {
+  background: var(--sky-bg);
+  color: var(--text-dark);
+}
+
+body[data-required-category="Normal Cadet"] .portal-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 100;
+  display: flex;
+  width: var(--portal-sidebar-width);
+  height: 100vh;
+  height: 100dvh;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  background: var(--card-bg);
+  box-shadow: 4px 0 18px rgba(30, 58, 138, 0.04);
+}
+
+body[data-required-category="Normal Cadet"] .portal-brand {
+  display: flex;
+  min-height: 82px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid var(--border-color);
+  color: inherit;
+  text-decoration: none;
+}
+
+body[data-required-category="Normal Cadet"] .portal-brand-mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+body[data-required-category="Normal Cadet"] .portal-brand-copy,
+body[data-required-category="Normal Cadet"] .portal-profile-details {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+body[data-required-category="Normal Cadet"] .portal-brand-copy strong {
+  color: var(--navy-dark);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+body[data-required-category="Normal Cadet"] .portal-brand-copy small,
+body[data-required-category="Normal Cadet"] .portal-profile-details small {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+body[data-required-category="Normal Cadet"] .portal-navigation {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  overflow-y: auto;
+  padding: 1rem 0.75rem;
+}
+
+body[data-required-category="Normal Cadet"] .portal-nav-label {
+  padding: 1rem 0.75rem 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body[data-required-category="Normal Cadet"] .portal-nav-link {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 9px;
+  color: #334155;
+  font-size: 0.83rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+body[data-required-category="Normal Cadet"] .portal-nav-link svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+body[data-required-category="Normal Cadet"] .portal-nav-link:hover,
+body[data-required-category="Normal Cadet"] .portal-nav-link:focus-visible {
+  background: var(--sky-light);
+  color: var(--primary-sky-hover);
+}
+
+body[data-required-category="Normal Cadet"] .portal-nav-link.is-active {
+  background: var(--primary-sky);
+  color: #ffffff;
+}
+
+body[data-required-category="Normal Cadet"] .portal-nav-link:focus-visible {
+  outline: 3px solid #7dd3fc;
+  outline-offset: 2px;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-footer {
+  position: relative;
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: auto;
+  padding: 0.85rem;
+  border-top: 1px solid var(--border-color);
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-picture {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  place-items: center;
+  overflow: hidden;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sky-light);
+  color: var(--primary-sky);
+  cursor: pointer;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-initials {
+  font-weight: 700;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-details {
+  flex: 1;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-details strong {
+  overflow: hidden;
+  color: var(--text-dark);
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-status {
+  position: absolute;
+  right: 0.75rem;
+  bottom: calc(100% + 0.25rem);
+  max-width: 220px;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-footer .logout-btn {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-footer .logout-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+body[data-required-category="Normal Cadet"] .portal-profile-footer .logout-btn:hover {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+body[data-required-category="Normal Cadet"] .dashboard-body {
+  width: auto;
+  max-width: 1600px;
+  margin: 0 0 0 var(--portal-sidebar-width);
+  padding: 1.75rem clamp(1.25rem, 3vw, 2.5rem) 4rem;
+}
+
+body[data-required-category="Normal Cadet"] .top-header {
+  margin-bottom: 1.25rem;
+}
+
+body[data-required-category="Normal Cadet"] .top-header h1 {
+  color: var(--navy-dark);
+  font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+body[data-required-category="Normal Cadet"] .top-header p {
+  margin-top: 0.3rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+body[data-required-category="Normal Cadet"] .top-header .portal-eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--primary-sky);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+body[data-required-category="Normal Cadet"] .user-dashboard-layout {
+  grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.9fr);
+  grid-template-areas:
+    "duties duties"
+    "general night"
+    "clc night";
+  align-items: stretch;
+  gap: 1.15rem;
+}
+
+body[data-required-category="Normal Cadet"] .user-dashboard-layout > .dashboard-main-content,
+body[data-required-category="Normal Cadet"] .user-dashboard-layout .user-announcements-grid {
+  display: contents;
+}
+
+body[data-required-category="Normal Cadet"] .user-dashboard-layout .duties-grid {
+  grid-area: duties;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+body[data-required-category="Normal Cadet"] .user-dashboard-layout .announcements-featured {
+  grid-column: auto;
+  width: auto;
+}
+
+body[data-required-category="Normal Cadet"] .user-dashboard-layout .user-announcements-grid > .announcements-featured:first-child {
+  grid-area: general;
+}
+
+body[data-required-category="Normal Cadet"] .user-dashboard-layout .user-announcements-grid > .announcements-featured:nth-child(2) {
+  grid-area: clc;
+}
+
+body[data-required-category="Normal Cadet"] .user-dashboard-layout .night-orders-sidebar {
+  grid-area: night;
+}
+
+body[data-required-category="Normal Cadet"] .night-orders-section {
+  min-height: 100%;
+}
+
+body[data-required-category="Normal Cadet"] .announcements-section {
+  border-color: #bae6fd;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.07);
+}
+
+body[data-required-category="Normal Cadet"] .announcements-header,
+body[data-required-category="Normal Cadet"] .night-orders-header {
+  background: var(--primary-sky);
+  border-bottom-color: var(--primary-sky-hover);
+}
+
+body[data-required-category="Normal Cadet"] .clc-announcements-header {
+  background: var(--navy-dark);
+  border-bottom-color: #172554;
+}
+
+body[data-required-category="Normal Cadet"] .portal-section {
+  border-color: #bae6fd;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.07);
+}
+
+body[data-required-category="Normal Cadet"] .portal-section .announcements-header,
+body[data-required-category="Normal Cadet"] .devils-report-header,
+body[data-required-category="Normal Cadet"] .nmo-record-header {
+  background: var(--primary-sky);
+  border-bottom-color: var(--primary-sky-hover);
+}
+
+body[data-required-category="Normal Cadet"] .portal-button {
+  background: var(--primary-sky);
+}
+
+body[data-required-category="Normal Cadet"] .portal-button:hover {
+  background: var(--primary-sky-hover);
+}
+
+body[data-required-category="Normal Cadet"] .portal-form {
+  border-color: #bae6fd;
+  background: #f0f9ff;
+}
+
+body[data-required-category="Normal Cadet"] .portal-form input:focus,
+body[data-required-category="Normal Cadet"] .portal-form textarea:focus,
+body[data-required-category="Normal Cadet"] .portal-form select:focus,
+body[data-required-category="Normal Cadet"] .portal-input:focus {
+  border-color: var(--primary-sky);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.16);
+}
+
+body[data-required-category="Normal Cadet"] .dashboard-announcement h3,
+body[data-required-category="Normal Cadet"] .portal-announcements-panel .dashboard-announcement h3 {
+  color: var(--navy-dark);
+}
+
+body[data-required-category="Normal Cadet"] .duties-btn {
+  min-height: 78px;
+  border-color: #bae6fd;
+  color: var(--navy-dark);
+}
+
+body[data-required-category="Normal Cadet"] .duties-btn:hover,
+body[data-required-category="Normal Cadet"] .duties-btn.active {
+  border-color: #7dd3fc;
+  background: var(--sky-light);
+}
+
+body[data-required-category="Normal Cadet"] .announcements-featured .announcements-content {
+  flex: 1;
+}
+
+body[data-required-category="Normal Cadet"] #generalAnnouncements,
+body[data-required-category="Normal Cadet"] #nightOrders,
+body[data-required-category="Normal Cadet"] #devilsReportSection,
+body[data-required-category="Normal Cadet"] #nmoPersonalRecord,
+body[data-required-category="Normal Cadet"] .portal-section {
+  scroll-margin-top: 1.25rem;
+}
+
+body[data-required-category="Normal Cadet"] {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-required-category="Normal Cadet"] {
+    scroll-behavior: auto;
+  }
+}
+
+@media (max-width: 1000px) {
+  body[data-required-category="Normal Cadet"] .user-dashboard-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "duties"
+      "general"
+      "clc"
+      "night";
+  }
+
+  body[data-required-category="Normal Cadet"] .user-dashboard-layout .duties-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  body[data-required-category="Normal Cadet"] .portal-sidebar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: auto;
+    max-height: 190px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.08);
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-brand {
+    min-height: 58px;
+    padding: 0.45rem 0.75rem;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-brand-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-navigation {
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.35rem 0.55rem 0.55rem;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-nav-label {
+    display: none;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-nav-link {
+    min-height: 38px;
+    flex: 0 0 auto;
+    gap: 0.45rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-nav-link svg {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-profile-footer {
+    display: flex;
+    min-height: 54px;
+    margin-top: 0;
+    padding: 0.4rem 0.65rem;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-profile-picture,
+  body[data-required-category="Normal Cadet"] .portal-profile-footer .logout-btn {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-profile-details strong {
+    font-size: 0.75rem;
+  }
+
+  body[data-required-category="Normal Cadet"] .portal-profile-details small {
+    font-size: 0.65rem;
+  }
+
+  body[data-required-category="Normal Cadet"] .dashboard-body {
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem 0.75rem 4rem;
+  }
+
+  body[data-required-category="Normal Cadet"] .user-dashboard-layout .duties-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body[data-required-category="Normal Cadet"] #generalAnnouncements,
+  body[data-required-category="Normal Cadet"] #nightOrders,
+  body[data-required-category="Normal Cadet"] #devilsReportSection,
+  body[data-required-category="Normal Cadet"] #nmoPersonalRecord,
+  body[data-required-category="Normal Cadet"] .portal-section {
+    scroll-margin-top: 12rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .announcements-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1643px) {
+  .dashboard-body {
+    max-width: 1280px;
+  }
+
+  .dashboard-layout {
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 27%);
+  }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

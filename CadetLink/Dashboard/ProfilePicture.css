@@ -1,0 +1,110 @@
+.account-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.profile-picture-button {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  place-items: center;
+  overflow: hidden;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #1e40af;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profile-picture-button:hover {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.profile-picture-button:focus-visible {
+  outline: 3px solid #bfdbfe;
+  outline-offset: 3px;
+}
+
+.profile-picture-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.profile-picture-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-picture-button img[hidden],
+.profile-picture-button .profile-picture-initials[hidden] {
+  display: none;
+}
+
+.profile-picture-button .profile-picture-initials {
+  display: grid;
+}
+
+.profile-picture-status {
+  max-width: 180px;
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+.cadet-profile-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.cadet-profile-avatar {
+  display: inline-grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.cadet-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cadet-profile-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.nmo-submitter {
+  margin: 0.4rem 0;
+}
+
+@media (max-width: 520px) {
+  .profile-picture-button {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .profile-picture-status {
+    max-width: 110px;
+  }
+}
